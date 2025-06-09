@@ -1,0 +1,16 @@
+name: YouTube
+description: 屏蔽广告
+
+url_rewrites:
+- match: ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$
+  location: '{{{请求处理服务}}}/$1?blockUpload={{{屏蔽上传按钮}}}&blockImmersive={{{屏蔽选段按钮}}}&blockShorts={{{屏蔽Shorts按钮}}}&captionLang={{{字幕翻译语言}}}&lyricLang={{{歌词翻译语言}}}&$4'
+  status_code: 307
+map_locals:
+- match: ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
+  status_code: 200
+  body: ''
+mitm:
+  hostnames:
+    includes:
+    - '*.googlevideo.com'
+    - youtubei.googleapis.com
