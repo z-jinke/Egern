@@ -1,4 +1,4 @@
-namename: ScriptHub
+namename: 脚本转换
 
 scriptings:
 - http_request:
