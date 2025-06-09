@@ -3,10 +3,8 @@ name: Youtube
 compat_arguments:
   屏蔽上传按钮: 'true'
   屏蔽选段按钮: 'true'
-  屏蔽Shorts按钮: 'false'
-  字幕翻译语言: off
-  歌词翻译语言: off
-  启用调试模式: 'false'
+  屏蔽Shorts按钮: 'true'
+  字幕翻译语言: zh-Hans
 
 rules:
 - and:
@@ -23,10 +21,12 @@ rules:
     - protocol:
         match: UDP
     policy: REJECT
+
 map_locals:
 - match: ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
   status_code: 200
   body: ''
+
 scriptings:
 - http_response:
     name: youtube.response
@@ -36,6 +36,7 @@ scriptings:
       _compat.$argument: '{"lyricLang":"{{{歌词翻译语言}}}","captionLang":"{{{字幕翻译语言}}}","blockUpload":{{{屏蔽上传按钮}}},"blockImmersive":{{{屏蔽选段按钮}}},"blockShorts":{{{屏蔽Shorts按钮}}},"debug":{{{启用调试模式}}}}'
     body_required: true
     binary_body: true
+
 mitm:
   hostnames:
     includes:
