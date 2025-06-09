@@ -1,5 +1,4 @@
 name: Youtube
-
 compat_arguments:
   屏蔽上传按钮: 'true'
   屏蔽选段按钮: 'true'
@@ -12,15 +11,9 @@ rules:
     - domain_suffix:
         match: googlevideo.com
     - protocol:
-        match: UDP
+        match: quic
     policy: REJECT
-- and:
-    match:
-    - domain:
-        match: youtubei.googleapis.com
-    - protocol:
-        match: UDP
-    policy: REJECT
+    disabled: false
 
 map_locals:
 - match: ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
