@@ -1,0 +1,69 @@
+name: 哔哩哔哩
+
+rules:
+- domain:
+    match: api.biliapi.com
+    policy: REJECT
+- domain:
+    match: app.biliapi.com
+    policy: REJECT
+- domain:
+    match: api.biliapi.net
+    policy: REJECT
+- domain:
+    match: app.biliapi.net
+    policy: REJECT
+
+body_rewrites:
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list
+    filter: .data.list[] |= (.duration = 0 | .begin_time = 1893427200 | .end_time = 1893427200)
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
+    filter: .data.items |= map(select(.goto == "av" and .card_goto == "av"))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
+    filter: .data.config.trigger_loadmore_left_line_num = 3
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
+    filter: .data.vip.status = 1 | .data.vip.type = 2 | .data.vip.role = 3 | .data.vip.due_date = 2524608000000
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
+    filter: .data |= map(select(.type != "recommend"))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
+    filter: .data.tab |= map(select(.id != 136117 and .id != 39 and .id != 408260)) | .data.top |= map(select(.id != 3500)) | .data.top_more |= [] | .data.bottom |= map(select(.id != 670 and .id != 3511))
+- response_jq:
+    match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
+    filter: .result.modules |= map(select(.module_id != 1639 and .module_id != 1633))
+- response_jq:
+    match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
+    filter: .data.modules |= map(select(.id != 2015 and .id != 2038))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
+    filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id as $id | [$id] | inside([400,401,402,403,404,622,406,2909,3046,913,514,924,968,990,3525]) | not)) elif .title == "更多服务" then del(.title) | .items |= map(if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) | .items |= map(select(.id as $id | [$id] | inside([812,964]) | not)) else . end)
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
+    filter: .data.ipad_recommend_sections |= map(select(.id != 758 and .id != 759 and .id != 760)) | .data.ipad_more_sections |= map(if .id == 764 then .title = "个人设置" elif .id == 763 then .title = "客服中心" else . end) | .data.ipad_more_sections |= map(select(.id != 965)) | del(.data.ipad_upper_sections)
+
+map_locals:
+- match: ^https:\/\/(app|api)\.bilibili\.com\/x\/(v2\/splash\/show|vip\/ads)
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: ''
+
+scriptings:
+- http_response:
+    name: 广告处理
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
+    script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.js
+    body_required: true
+    binary_body: true
+
+mitm:
+  hostnames:
+    includes:
+    - api.bilibili.com
+    - app.bilibili.com
+    - grpc.biliapi.net
