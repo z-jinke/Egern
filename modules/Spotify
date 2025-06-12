@@ -1,4 +1,4 @@
-name: Spotify
+name: Spotify音乐
 
 header_rewrites:
 - replace:
