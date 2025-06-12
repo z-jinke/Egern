@@ -1,10 +1,17 @@
 name: 网易云音乐
+
 compat_arguments:
-  MY: 'true'
-  DT: 'true'
-  PRRK: 'true'
-  PRST: 'true'
-  PRCN: 'true'
+  MY: 'false'
+  DT: 'false'
+  PRRK: 'false'
+  PRST: 'false'
+  PRCN: 'false'
+  PRGG: 'false'
+  PRDRD: 'false'
+  PRSCVPT: 'false'
+  PRRR: 'false'
+  HMPR: 'false'
+  PRMST: 'false'
 
 map_locals:
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/e?api\/(ocpc\/)?ad\/
