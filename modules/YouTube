@@ -1,9 +1,5 @@
 name: Youtube
 
-compat_arguments:
-  上传按钮: 'true'
-  Shorts按钮: 'true'
-
 rules:
 - and:
     match:
@@ -21,11 +17,9 @@ map_locals:
 
 scriptings:
 - http_response:
-    name: youtube.response
+    name: 广告处理
     match: ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
-    arguments:
-      _compat.$argument: '{"lyricLang":"{{{歌词翻译}}}","captionLang":"{{{字幕翻译}}}","blockUpload":{{{上传按钮}}},"blockImmersive":{{{选段按钮}}},"blockShorts":{{{Shorts按钮}}},"debug":{{{启用调试模式}}}}'
     body_required: true
     binary_body: true
 
