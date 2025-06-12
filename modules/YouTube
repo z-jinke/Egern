@@ -1,10 +1,10 @@
 name: Youtube
 
 compat_arguments:
-上传按钮: 'true'
-选段按钮: 'true'
-Shorts按钮: 'true'
-字幕翻译: zh-Hans
+  上传按钮: 'true'
+  选段按钮: 'true'
+  Shorts按钮: 'true'
+  字幕翻译: zh-Hans
 
 rules:
 - and:
