@@ -10,7 +10,7 @@ compat_arguments:
   推荐专属歌单: 'false'
   你的专属歌单: 'false'
   发现: 'true'
-  漫游: 'true'
+  漫游: 'false'
   笔记: 'true'
 
 header_rewrites:
