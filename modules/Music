@@ -63,16 +63,14 @@ scriptings:
     name: 推荐处理
     match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
-    arguments:
-      _compat.$argument: "{PRGG},{PRRK},{PRDRD},{PRSCVPT},{PRST},{PRRR},{HMPR},{PRMST},{PRCN}"
+    arguments: "{PRGG},{PRRK},{PRDRD},{PRSCVPT},{PRST},{PRRR},{HMPR},{PRMST},{PRCN}"
     body_required: true
     binary_body: true
 - http_response:
     name: 底栏处理
     match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
-    arguments:
-      _compat.$argument: '[{MY},{DT},{FX}]'
+    arguments: "{MY},{DT},{FX}"
     body_required: true
     binary_body: true
 - http_response:
