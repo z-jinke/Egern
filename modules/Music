@@ -1,5 +1,19 @@
 name: 网易云音乐
 
+compat_arguments:
+  FX: 'false'
+  MY: 'false'
+  DT: 'false'
+  PRGG: 'true'
+  PRRK: 'true'
+  PRDRD: 'true'
+  PRSCVPT: 'false'
+  PRST: 'true'
+  PRRR: 'false'
+  HMPR: 'true'
+  PRMST: 'true'
+  PRCN: 'false'
+
 header_rewrites:
 - replace:
     match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/e?api\/(?:batch|homepage\/block\/page|v\d\/(?:resource\/comment\/floor\/get|user\/detail\/\d+|discovery\/recommend\/songs|playlist\/detail)|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show)|user\/follow\/users\/mixed\/get|link\/home\/framework\/tab|link\/position\/show\/resource|link\/page\/discovery\/resource\/show|mine\/(?:collect|rn)\/header\/info|vipnewcenter\/app\/resource\/newaccountpage|music-vip-membership\/(?:client|front)\/vip\/info|playlist\/privilege|search\/complex\/page)
@@ -45,6 +59,22 @@ map_locals:
   body: ''
 
 scriptings:
+- http_response:
+    name: 推荐处理
+    match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
+    script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
+    arguments:
+      _compat.$argument: '{PRGG}","{PRRK}","{PRDRD}","{PRSCVPT}","{PRST},","{PRRR}","{HMPR}","{PRMST}","{PRCN}'
+    body_required: true
+    binary_body: true
+- http_response:
+    name: 底栏处理
+    match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
+    script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
+    arguments:
+      _compat.$argument: '[{MY},{DT},{FX}]'
+    body_required: true
+    binary_body: true
 - http_response:
     name: 广告处理
     match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get)
