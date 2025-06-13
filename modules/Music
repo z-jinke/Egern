@@ -45,24 +45,6 @@ scriptings:
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     body_required: true
     binary_body: true
-- http_response:
-    name: 底部处理
-    match: ^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/home\/framework\/tab
-    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
-    body_required: true
-    binary_body: true
-- http_response:
-    name: 发现处理
-    match: ^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/discovery\/resource\/show
-    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
-    body_required: true
-    binary_body: true
-- http_response:
-    name: 推荐处理
-    match: ^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/rcmd\/resource\/show
-    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
-    body_required: true
-    binary_body: true
 
 mitm:
   hostnames:
