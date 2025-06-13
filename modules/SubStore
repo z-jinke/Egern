@@ -1,0 +1,18 @@
+name: Sub-Store
+
+scriptings:
+- http_request:
+    name: 后端处理
+    match: ^https?:\/\/sub\.store\/((download)|api\/(preview|sync|(utils\/node-info)))
+    script_url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-1.min.js
+    body_required: true
+- http_request:
+    name: 订阅前端
+    match: ^https?:\/\/sub\.store
+    script_url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-0.min.js
+    body_required: true
+
+mitm:
+  hostnames:
+    includes:
+    - sub.store
