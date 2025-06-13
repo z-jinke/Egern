@@ -10,8 +10,8 @@ compat_arguments:
   推荐专属歌单: 'false'
   你的专属歌单: 'false'
   发现: 'true'
-  漫游: 'false'
   笔记: 'true'
+  漫游: 'false'
 
 header_rewrites:
 - replace:
@@ -71,7 +71,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"MY":{{{发现}}},"DT":{{{漫游}}},"FX":{{{笔记}}}}'
+      _compat.$argument: '{"FX":{{{发现}}},"MY":{{{漫游}}},"DT":{{{笔记}}}}'
     body_required: true
     binary_body: true
 - http_response:
