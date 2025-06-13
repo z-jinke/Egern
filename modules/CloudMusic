@@ -1,15 +1,15 @@
 name: 网易云音乐
 
 compat_arguments:
-  问候语: 'true'
-  排行榜: 'false'
-  每日推荐: 'true'
-  推荐歌单: 'true'
-  最近常听: 'false'
-  雷达歌单: 'true'
-  音乐合伙人: 'false'
-  推荐专属歌单: 'true'
-  你的专属歌单: 'false'
+  PRGG: 'true' 
+  PRRK: 'false' 
+  PRDRD: 'true' 
+  PRSCVPT: 'true'      
+  PRST: 'false'       
+  PRRR: 'true'        
+  HMPR: 'false'        
+  PRMST: 'true'        
+  PRCN: 'false'      
 
 header_rewrites:
 - replace:
@@ -61,7 +61,7 @@ scriptings:
     match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"PRGG":{{{问候语}}},"PRRK":{{{排行榜}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"HMPR":{{{音乐合伙人}}},"PRMST":{{{推荐专属歌单}}},"PRCN":{{{你的专属歌单}}}}'
+      _compat.$argument: '{"PRGG":{{{PRGG}}},"PRRK":{{{PRRK}}},"PRDRD":{{{PRDRD}}},"PRSCVPT":{{{PRSCVPT}}},"PRST":{{{PRST}}},"PRRR":{{{PRRR}}},"HMPR":{{{HMPR}}},"PRMST":{{{PRMST}}},"PRCN":{{{PRCN}}}}'
     body_required: true
     binary_body: true
 - http_response:
