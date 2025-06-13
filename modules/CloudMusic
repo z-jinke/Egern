@@ -1,14 +1,14 @@
 name: 网易云音乐
 
 compat_arguments:
-  你的专属歌单: 'false'
-  排行榜: 'true'
+  问候语: 'true'
+  排行榜: 'false'
   每日推荐: 'true'
-  推荐歌单: 'false'
-  最近常听: 'true'
-  雷达歌单: 'false'
+  推荐歌单: 'true'
+  最近常听: 'false'
+  雷达歌单: 'true'
   推荐专属歌单: 'true'
-  你的专属歌单: 'false'
+  你的专属歌单: 'true'
 
 header_rewrites:
 - replace:
