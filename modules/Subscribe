@@ -1,23 +1,22 @@
 name: 机场信息
 
 compat_arguments:
-  订阅链接: ''
-  显示名称: 我的机场
+  订阅链接: '订阅URL'
+  显示名称: 机场名称
   重置日: '1'
-  图标: tornado
   颜色: '#DF4688'
 
 scriptings:
 - generic:
-    name: 机场订阅信息
+    name: 机场订阅
     script_url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js
     arguments:
-      _compat.$argument: 'url={{{订阅链接}}}&title={{{显示名称}}}&reset_day={{{重置日}}}&icon={{{图标}}}&color={{{颜色}}}'
+      _compat.$argument: 'url={{{订阅链接}}}&title={{{显示名称}}}&reset_day={{{重置日}}}&color={{{颜色}}}'
     update_interval: 86400
     timeout: 5
 
 panels:
-- name: 机场订阅信息
+- name: 机场订阅
   title: '机场信息'
   content: |
     名称：{{airport_name}}
