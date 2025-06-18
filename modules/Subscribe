@@ -1,0 +1,12 @@
+name: 机场信息
+
+scriptings:
+- generic:
+    name: 1号机场
+    script_url: https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js
+    arguments:
+      _compat.$argument: url=https://132.232.133.234/link/LaOvAj695mQrqPCJGYorQWrtpQ3dpxZQ?config=all&title=Aladdin&icon=tornado&color=#DF4688
+    update_interval: 86400
+    timeout: 5
+panels:
+- name: Sub-info
