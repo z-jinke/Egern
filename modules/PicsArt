@@ -4,7 +4,7 @@ scriptings:
 - http_response:
     name: 解锁处理
     match: ^https:\/\/api\.aidimension\.cn\/shop\/subscription\/apple\/purchases
-    script_url: https://github.com/z-jinke/Loon/raw/refs/heads/main/js/picsart.js
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/PicsArt.js
     body_required: true
     binary_body: false
 mitm:
