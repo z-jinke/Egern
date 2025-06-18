@@ -1,4 +1,4 @@
-name: PicsArt
+name: 美易PicsArt
 
 scriptings:
 - http_response:
