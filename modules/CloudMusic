@@ -1,15 +1,17 @@
 name: 网易云音乐
 
 compat_arguments:
-  每日排行榜: 'true'
-  每日问候语: 'false'
+  底栏发现: 'true'
+  底栏笔记: 'true'
+  底栏漫游: 'false'
+  你的歌单: 'true'
+  专属歌单: 'true'
   每日推荐: 'false'
   推荐歌单: 'false'
   最近常听: 'true'
   雷达歌单: 'false'
-  底栏发现: 'true'
-  底栏笔记: 'true'
-  底栏漫游: 'false'
+  每日排行榜: 'true'
+  每日问候语: 'false'
 
 header_rewrites:
 - replace:
@@ -62,7 +64,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"PRGG":{{{每日问候语}}},"PRRK":{{{每日排行榜}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"PRMST":{{{推荐专属歌单}}},"PRCN":{{{你的专属歌单}}}}'
+      _compat.$argument: '{"PRGG":{{{每日问候语}}},"PRRK":{{{每日排行榜}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"PRMST":{{{专属歌单}}},"PRCN":{{{你的歌单}}}}'
     body_required: true
     binary_body: true
 - http_response:
