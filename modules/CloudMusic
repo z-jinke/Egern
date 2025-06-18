@@ -19,6 +19,7 @@ header_rewrites:
     name: x-aeapi
     value: 'false'
     type: request
+
 map_locals:
 - match: ^https:\/\/interface\d?\.music\.163\.com\/e?api\/vip\/cashier\/tspopup\/get
   status_code: 200
