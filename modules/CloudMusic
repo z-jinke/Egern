@@ -13,6 +13,10 @@ compat_arguments:
   每日排行榜: 'true'
   每日问候语: 'false'
 
+compat_arguments_desc: >
+  开启参数：true
+  关闭参数：false
+
 header_rewrites:
 - replace:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/e?api\/(?:batch|homepage\/block\/page|v\d\/(?:resource\/comment\/floor\/get|user\/detail\/\d+|discovery\/recommend\/songs|playlist\/detail)|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show)|user\/follow\/users\/mixed\/get|link\/home\/framework\/tab|link\/position\/show\/resource|link\/page\/discovery\/resource\/show|mine\/(?:collect|rn)\/header\/info|vipnewcenter\/app\/resource\/newaccountpage|music-vip-membership\/(?:client|front)\/vip\/info|playlist\/privilege|search\/complex\/page)
