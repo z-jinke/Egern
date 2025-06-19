@@ -1,5 +1,10 @@
 name: Youtube(Music)
 
+compat_arguments_desc:
+  • 开启参数：true
+  • 关闭参数：false
+  • 翻译语言：zh-Hans
+
 compat_arguments:
   关闭Shorts: 'true'
   关闭上传按钮: 'true'
@@ -7,11 +12,6 @@ compat_arguments:
   关闭选段按钮: 'true'
   歌词翻译语言: zh-Hans
   启用调试模式: 'false'
-
-compat_arguments_desc: >
-  开启参数：true/关闭参数：false
-
-  翻译语言：zh-Hans
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
