@@ -1,4 +1,4 @@
-namename: Spotify音乐
+name: Spotify音乐
 
 compat_arguments:
   类型: '"Translate,External"'
