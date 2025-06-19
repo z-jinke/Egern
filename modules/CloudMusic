@@ -14,8 +14,7 @@ compat_arguments:
   每日问候语: 'false'
 
 compat_arguments_desc: >
-  开启参数：true
-  关闭参数：false
+  开启参数：true/关闭参数：false
 
 header_rewrites:
 - replace:
