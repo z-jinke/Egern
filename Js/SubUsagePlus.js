@@ -9,8 +9,9 @@
     const expireDate = args.expire || info.expire;
     const expireDaysLeft = getExpireDaysLeft(expireDate);
 
-    const used = info.download + info.upload;
-    const total = info.total;
+    // 容错计算已用流量
+    const used = (info.download || 0) + (info.upload || 0);
+    const total = info.total || 0;
     const content = [];
 
     buildNotifications(content, used, total, resetDayLeft, expireDaysLeft, expireDate);
@@ -34,11 +35,11 @@
 
 function buildNotifications(content, used, total, resetDayLeft, expireDaysLeft, expireDate) {
   const remaining = total - used;
-  const percentage = ((used / total) * 100).toFixed(1);
+  const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
-  content.push(`已用：${bytesToSize(used)}`);
-  content.push(`剩余：${bytesToSize(remaining)}`);
-  content.push(`使用率：${percentage}%`);
+  content.push(`使用进度：${percentage}%`);
+  content.push(`已用流量：${bytesToSize(used)}`);
+  content.push(`剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`);
 
   if (resetDayLeft !== null) {
     content.push(`重置：${resetDayLeft} 天后`);
@@ -54,24 +55,25 @@ function buildNotifications(content, used, total, resetDayLeft, expireDaysLeft, 
 }
 
 function getArgs() {
-  return Object.fromEntries(
-    $argument
-      .split("&")
-      .map((item) => {
-        const [key, value] = item.split("=");
-        return [key, value ? decodeURIComponent(value) : null];
-      })
-      .filter(([key]) => key)
-  );
+  try {
+    return Object.fromEntries(new URLSearchParams($argument));
+  } catch {
+    // 兼容老版本解析
+    return Object.fromEntries(
+      $argument
+        .split("&")
+        .map((item) => {
+          const [key, value] = item.split("=");
+          return [key, value ? decodeURIComponent(value) : null];
+        })
+        .filter(([key]) => key)
+    );
+  }
 }
 
-function getUserInfo(url) {
-  if (!url) {
-    return Promise.reject("未提供有效的订阅链接");
-  }
-
+function getSubscriptionUserInfo(url) {
   const request = {
-    headers: { "User-Agent": "Quantumult%20X" },
+    headers: { "User-Agent": "Shadowrocket" },
     url,
   };
 
@@ -84,9 +86,7 @@ function getUserInfo(url) {
         (key) => key.toLowerCase() === "subscription-userinfo"
       );
 
-      if (header) {
-        return resolve(resp.headers[header]);
-      }
+      if (header) return resolve(resp.headers[header]);
 
       reject("未找到流量信息头部");
     });
@@ -95,7 +95,7 @@ function getUserInfo(url) {
 
 async function getDataInfo(url) {
   try {
-    const data = await getUserInfo(url);
+    const data = await getSubscriptionUserInfo(url);
     const matches = data.match(/\w+=[\d.eE+-]+/g);
     if (!matches || matches.length === 0) throw new Error("无法解析返回的数据");
 
@@ -135,7 +135,7 @@ function getRemainingDays(resetDay) {
 function getExpireDaysLeft(expire) {
   if (!expire) return null;
 
-  const now = new Date().getTime();
+  const now = Date.now();
   let expireTime;
 
   if (typeof expire === 'number' || /^[\d.]+$/.test(expire)) {
