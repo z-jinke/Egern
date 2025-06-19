@@ -2,7 +2,7 @@ name: 机场流量信息
 
 compat_arguments:
   订阅链接: '订阅URL'
-  机场名称: 机场
+  机场名称: 订阅机场
   重置日期: '1'
   显示图标: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
 
