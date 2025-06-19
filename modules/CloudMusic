@@ -1,9 +1,5 @@
 name: 网易云音乐
 
-compat_arguments_desc: >
-  • 开启参数：true
-  • 关闭参数：false
-
 compat_arguments:
   底栏发现: 'true'
   底栏笔记: 'true'
