@@ -8,6 +8,11 @@ compat_arguments:
   歌词翻译语言: zh-Hans
   启用调试模式: 'false'
 
+compat_arguments_desc: >
+  开启参数：true
+  关闭参数：false
+  翻译语言：zh-Hans
+
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
   status_code: 200
