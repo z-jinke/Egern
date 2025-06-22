@@ -1,41 +1,5 @@
 name: 高德地图
 
-rules:
-  - and:
-      match:
-        - url_regex: ^http:\/\/.+\/amdc\/mobileDispatch
-        - user_agent: AMapiPhone*
-    policy: REJECT
-
-  - domain:
-      match: amap-aos-info-nogw.amap.com
-    policy: REJECT
-
-  - domain:
-      match: free-aos-cdn-image.amap.com
-    policy: REJECT
-
-  - domain_suffix:
-      match: v.smtcdns.com
-    policy: REJECT
-
-body_rewrites:
-  - response_jq:
-      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
-      filter: delpaths([["data", "tipsOperationLocation"]])
-
-  - response_jq:
-      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
-      filter: delpaths([["obj", "data", "resourcePlacement"]])
-
-  - response_jq:
-      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?
-      filter: delpaths([["history_tags"]])
-
-  - response_jq:
-      match: ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?
-      filter: delpaths([["data", "carTips", "data", "popupInfo"]])
-
 map_locals:
   - match: ^https:\/\/(?:m5(?:-zb)?|oss|sns)\.amap\.com\/ws\/(?:aos\/main\/page\/product\/list|shield\/search\/new_hotword|faas\/amap-navigation\/card-service-(?:car-end|route-plan)|shield\/search_poi\/tips_adv|faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc)|mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/scene\/recommend|valueadded\/weather\/v2|banner\/lists\/|boss\/order\/car\/(?:feedback\/get_card_questions|feedback\/viptips|king_toolbox_car_bubble|remark\/satisfactionConf|rights_information)|boss\/tips\/onscene_visual_optimization|boss\/pay\/web\/paySuccess\/info\/request|msgbox\/pull_mp)
     status_code: 200
