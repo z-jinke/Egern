@@ -1,56 +1,60 @@
 name: 高德地图
 
 rules:
-- and:
-    match:
-    - url_regex:
-        match: ^http:\/\/.+\/amdc\/mobileDispatch
-    - user_agent:
-        match: AMapiPhone*
+  - and:
+      match:
+        - url_regex: ^http:\/\/.+\/amdc\/mobileDispatch
+        - user_agent: AMapiPhone*
     policy: REJECT
-- domain:
-    match: amap-aos-info-nogw.amap.com
+
+  - domain:
+      match: amap-aos-info-nogw.amap.com
     policy: REJECT
-- domain:
-    match: free-aos-cdn-image.amap.com
+
+  - domain:
+      match: free-aos-cdn-image.amap.com
     policy: REJECT
-- domain_suffix:
-    match: v.smtcdns.com
+
+  - domain_suffix:
+      match: v.smtcdns.com
     policy: REJECT
 
 body_rewrites:
-- response_jq:
-    match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
-    filter: delpaths([["data","tipsOperationLocation"]])
-- response_jq:
-    match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
-    filter: delpaths([["obj","data","resourcePlacement"]])
-- response_jq:
-    match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?
-    filter: delpaths([["history_tags"]])
-- response_jq:
-    match: ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?
-    filter: delpaths([["data","carTips","data","popupInfo"]])
+  - response_jq:
+      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
+      filter: delpaths([["data", "tipsOperationLocation"]])
+
+  - response_jq:
+      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
+      filter: delpaths([["obj", "data", "resourcePlacement"]])
+
+  - response_jq:
+      match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?
+      filter: delpaths([["history_tags"]])
+
+  - response_jq:
+      match: ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?
+      filter: delpaths([["data", "carTips", "data", "popupInfo"]])
 
 map_locals:
-- match: ^https:\/\/(?:m5(?:-zb)?|oss|sns)\.amap\.com\/ws\/(?:aos\/main\/page\/product\/list|shield\/search\/new_hotword|faas\/amap-navigation\/card-service-(?:car-end|route-plan)|shield\/search_poi\/tips_adv|faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc)|mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/scene\/recommend|valueadded\/weather\/v2|banner\/lists\/|boss\/order\/car\/(?:feedback\/get_card_questions|feedback\/viptips|king_toolbox_car_bubble|remark\/satisfactionConf|rights_information)|boss\/tips\/onscene_visual_optimization|boss\/pay\/web\/paySuccess\/info\/request|msgbox\/pull_mp)
+  - match: ^https:\/\/(?:m5(?:-zb)?|oss|sns)\.amap\.com\/ws\/(?:aos\/main\/page\/product\/list|shield\/search\/new_hotword|faas\/amap-navigation\/card-service-(?:car-end|route-plan)|shield\/search_poi\/tips_adv|faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc)|mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/scene\/recommend|valueadded\/weather\/v2|banner\/lists\/|boss\/order\/car\/(?:feedback\/get_card_questions|feedback\/viptips|king_toolbox_car_bubble|remark\/satisfactionConf|rights_information)|boss\/tips\/onscene_visual_optimization|boss\/pay\/web\/paySuccess\/info\/request|msgbox\/pull_mp)
     status_code: 200
     headers:
-    Content-Type: application/json
+      Content-Type: application/json
     body: '{}'
 
 scriptings:
-- http_response:
-    name: 广告处理
-    match: ^https:\/\/(?:m5(?:-zb)?|info)\.amap\.com\/(?:ws\/(?:aos\/perception\/publicTravel\/beforeNavi|bus\/plan\/integrate|c3frontend\/af-(?:hotel|launch)\/page\/main|c3frontend\/af-nearby\/nearby|perception\/drive\/(?:routeInfo|routePlan)|shield\/search\/(?:common\/coupon\/info|poi\/detail|nearbyrec_smart)|shield\/search_bff\/hotword|shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)|faas\/amap-navigation\/(?:card-service-plan-home|main-page)|shield\/frogserver\/aocs\/updatable\/1|shield\/dsp\/profile\/index\/nodefaasv3|valueadded\/alimama\/splash_screen|boss\/(?:car\/order\/content_info|order_web\/friendly_information)|promotion-web\/resource(?:\/home)?)(?:\?|$))
-    script_url: https://kelee.one/Resource/Script/Amap/Amap_remove_ads.js
-    body_required: true
+  - http_response:
+      name: 广告处理
+      match: ^https:\/\/(?:m5(?:-zb)?|info)\.amap\.com\/(?:ws\/(?:aos\/perception\/publicTravel\/beforeNavi|bus\/plan\/integrate|c3frontend\/af-(?:hotel|launch)\/page\/main|c3frontend\/af-nearby\/nearby|perception\/drive\/(?:routeInfo|routePlan)|shield\/search\/(?:common\/coupon\/info|poi\/detail|nearbyrec_smart)|shield\/search_bff\/hotword|shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)|faas\/amap-navigation\/(?:card-service-plan-home|main-page)|shield\/frogserver\/aocs\/updatable\/1|shield\/dsp\/profile\/index\/nodefaasv3|valueadded\/alimama\/splash_screen|boss\/(?:car\/order\/content_info|order_web\/friendly_information)|promotion-web\/resource(?:\/home)?)(?:(?:\?|$)))
+      script_url: https://kelee.one/Resource/Script/Amap/Amap_remove_ads.js
+      body_required: true
 
 mitm:
   hostnames:
     includes:
-    - info.amap.com
-    - m5.amap.com
-    - m5-zb.amap.com
-    - oss.amap.com
-    - sns.amap.com
+      - info.amap.com
+      - m5.amap.com
+      - m5-zb.amap.com
+      - oss.amap.com
+      - sns.amap.com
