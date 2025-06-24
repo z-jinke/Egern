@@ -6,8 +6,6 @@ compat_arguments:
 map_locals:
   - match: ^https:\/\/.+\.spotify\.com\/pendragon\/
     status_code: 200
-    headers:
-      Content-Type: application/json
     body: '{}'
 
 header_rewrites:
