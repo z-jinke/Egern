@@ -3,38 +3,29 @@ name: Spotify音乐
 compat_arguments:
   关闭创建: "false"
 
-rules:
-- and:
-    match:
-    - domain_suffix:
-        match: spotify.com
-    - protocol:
-        match: QUIC
-    policy: REJECT
-
 map_locals:
-- match: ^https:\/\/.+\.spotify\.com\/pendragon\/
-  status_code: 200
-  headers:
-    Content-Type: application/json
-  body: '{}'
+  - match: ^https:\/\/.+\.spotify\.com\/pendragon\/
+    status_code: 200
+    headers:
+      Content-Type: application/json
+    body: '{}'
 
 header_rewrites:
-- replace:
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize$
-    name: if-none-match
-    value: '*'
-    type: request
-    binary_body: true
+  - replace:
+      match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize$
+      name: if-none-match
+      value: '*'
+      type: request
+      binary_body: true
 
-- http_response:
-    name: 解锁处理
-    match: ^https:\/\/.+\.spotify\.com(:443)?\/(?:bootstrap|user-customization-service)
-    script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
-    arguments:
-      _compat.$argument: 'tab={{{关闭创建}}}'
-    body_required: true
-    binary_body: true
+  - http_response:
+      name: 解锁处理
+      match: ^https:\/\/.+\.spotify\.com(:443)?\/(?:bootstrap|user-customization-service)
+      script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
+      arguments:
+        _compat.$argument: 'tab={{{关闭创建}}}'
+      body_required: true
+      binary_body: true
 
 mitm:
   hostnames:
