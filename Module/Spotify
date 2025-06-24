@@ -4,7 +4,7 @@ compat_arguments:
   关闭创建: 'false'
 
 map_locals:
-  - match: ^https:\/\/.+\.spotify\.com\/pendragon\/
+  - match: ^https:\/\/[\w.-]+\.spotify\.com\/pendragon\/
     status_code: 200
     body: '{}'
 
@@ -16,12 +16,13 @@ header_rewrites:
       type: request
       binary_body: true
 
+scriptings:
   - http_response:
       name: 解锁处理
-      match: ^https:\/\/.+\.spotify\.com(:443)?\/(?:bootstrap|user-customization-service)
+      match: ^https:\/\/[\w.-]+\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
       script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
       arguments:
-        _compat.$argument: '{"tab":"{{{关闭创建}}}}'
+        _compat.$argument: '{"tab":"{{{关闭创建}}}"}'
       body_required: true
       binary_body: true
 
