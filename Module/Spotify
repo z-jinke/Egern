@@ -1,6 +1,7 @@
 name: Spotify音乐
 
 compat_arguments:
+  关闭创建:'"false"'
   类型: '"Translate,External"'
   翻译目标: '"AUTO"'
   翻译成为: '"ZH"'
@@ -79,8 +80,10 @@ scriptings:
 #解锁订阅会员
 - http_response:
     name: 解锁处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize)$
-    script_url: https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-proto.js
+    match: ^https:\/\/.+\.spotify\.com(:443)?\/(?:bootstrap|user-customization-service)
+    script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
+    arguments:
+      _compat.$argument: 'tab={{{关闭创建}}}'
     body_required: true
     binary_body: true
 
