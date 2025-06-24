@@ -1,13 +1,13 @@
 name: Spotify音乐
 
 compat_arguments:
-  关闭创建:'"false"'
-  类型: '"Translate,External"'
-  翻译目标: '"AUTO"'
-  翻译成为: '"ZH"'
-  翻译服务: '"Google"'
-  歌词服务: '"QQMusic"'
-  日志等级: '"OFF"'
+  关闭创建: "false"
+  类型: "Translate,External"
+  翻译目标: "AUTO"
+  翻译成为: "ZH"
+  翻译服务: "Google"
+  歌词服务: "QQMusic"
+  日志等级: "OFF"
 
 header_rewrites:
 - replace:
@@ -15,9 +15,9 @@ header_rewrites:
     name: if-none-match
     value: '*'
     type: request
+    binary_body: true
 
 scriptings:
-#歌词双语翻译+补全
 - http_response:
     name: 歌曲信息处理
     match: ^https:\/\/api\.spotify\.com\/v1\/tracks\?
@@ -25,59 +25,32 @@ scriptings:
     arguments:
       _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
     body_required: true
-
 - http_request:
     name: 注入请求参数
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json
-    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
-    arguments:
-      _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
-    body_required: true
-
-- http_request: 
-    name: 注入请求参数
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?.*
     script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
     arguments:
       _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
     body_required: true
     binary_body: true
-
 - http_response:
     name: 翻译歌词处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json(.*)subtype=Translate
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?.*subtype=Translate
+    script_url: https://github.com/DualSubs/Universal/releases/download/v1.9.9/Translate.response.bundle.js
     arguments:
       _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
     body_required: true
-
+    binary_body: true
 - http_response:
-    name: 翻译歌词处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)subtype=Translate
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
+    name: 补全歌词处理
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?.*subtype=External
+    script_url: https://github.com/DualSubs/Universal/releases/download/v1.9.9/External.Lyrics.response.bundle.js
     arguments:
       _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
     body_required: true
     binary_body: true
 
-- http_response:
-    name: 补全歌词处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json(.*)subtype=External
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-    arguments:
-      _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
-    body_required: true
 
-- http_response: 
-    name: 补全歌词处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)subtype=External
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-    arguments:
-      _compat.$argument: 'Types={{{类型}}}&Languages[0]={{{翻译目标}}}&Languages[1]={{{翻译成为}}}&Vendor={{{翻译服务}}}&LrcVendor={{{歌词服务}}}&LogLevel={{{日志等级}}}'
-    body_required: true
-    binary_body: true
-
-#解锁订阅会员
 - http_response:
     name: 解锁处理
     match: ^https:\/\/.+\.spotify\.com(:443)?\/(?:bootstrap|user-customization-service)
@@ -90,5 +63,5 @@ scriptings:
 mitm:
   hostnames:
     includes:
-    - api.spotify.com
-    - spclient.wg.spotify.com
+      - api.spotify.com
+      - spclient.wg.spotify.com
