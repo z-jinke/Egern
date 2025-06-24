@@ -1,5 +1,19 @@
 name: 哔哩哔哩
 
+rules:
+- domain:
+    match: api.biliapi.com
+    policy: REJECT
+- domain:
+    match: app.biliapi.com
+    policy: REJECT
+- domain:
+    match: api.biliapi.net
+    policy: REJECT
+- domain:
+    match: app.biliapi.net
+    policy: REJECT
+
 map_locals:
 - match: ^https:\/\/(app|api)\.bilibili\.com\/x\/(v2\/splash\/show|vip\/ads)
   status_code: 200
