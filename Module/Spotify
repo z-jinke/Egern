@@ -9,11 +9,6 @@ compat_arguments:
   歌词源服务商: QQMusic
   日志等级: OFF
 
-map_locals:
-  - match: ^https:\/\/[\w.-]+\.spotify\.com\/pendragon\/
-    status_code: 200
-    body: '{}'
-
 header_rewrites:
   - replace:
       match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize$
@@ -21,6 +16,11 @@ header_rewrites:
       value: '*'
       type: request
       binary_body: true
+
+map_locals:
+  - match: ^https:\/\/[\w.-]+\.spotify\.com\/pendragon\/
+    status_code: 200
+    body: '{}'
 
 scriptings:
   - http_response:
