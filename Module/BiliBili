@@ -17,9 +17,17 @@ rules:
 map_locals:
 - match: ^https:\/\/(app|api)\.bilibili\.com\/x\/(v2\/splash\/show|vip\/ads)
   status_code: 200
-  headers:
-    Content-Type: application/json
   body: ''
+- match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
+  body: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
+  binary: true
+- match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+  body: AAAAACkaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7IgAoAToAQgBKAA==
+  binary: true
+- match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.view\.v1\.View\/TFInfo$
+  body: AAAAAAIIAQ==
+  binary: true
+
 
 body_rewrites:
 - response_jq:
