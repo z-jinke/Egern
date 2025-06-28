@@ -32,7 +32,7 @@ body_rewrites:
     filter: .data |= map(select(.type != "recommend"))
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
-    filter: .data.tab |= map(select(.id != 136117 and .id != 39 and .id != 408260)) | .data.top |= map(select(.id != 3500)) | .data.top_more |= [] | .data.bottom |= map(select(.id != 670 and .id != 3511))
+    filter: .data.tab |= map(select(.id != 136117 and .id != 39 and .id != 408260 and .id != 408432)) | .data.top |= map(select(.id != 3500)) | .data.top_more |= [] | .data.bottom |= map(select(.id != 670 and .id != 3511))
 - response_jq:
     match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
     filter: .result.modules |= map(select(.module_id != 1639 and .module_id != 1633))
