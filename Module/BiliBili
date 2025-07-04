@@ -41,7 +41,7 @@ body_rewrites:
     filter: .data.modules |= map(select(.id != 2015 and .id != 2038))
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
-    filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id as $id | [$id] | inside([400,401,402,403,404,622,406,2909,3046,913,514,924,968,990,3525,3547,3549,3550]) | not)) elif .title == "更多服务" then del(.title) | .items |= map(if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) | .items |= map(select(.id as $id | [$id] | inside([812,964]) | not)) else . end)
+    filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id as $id | [$id] | inside([400,401,402,403,404,622,406,2909,3046,913,514,924,968,990,3525,3547,3549,3550,3555]) | not)) elif .title == "更多服务" then del(.title) | .items |= map(if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) | .items |= map(select(.id as $id | [$id] | inside([812,964]) | not)) else . end)
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
     filter: .data.ipad_recommend_sections |= map(select(.id != 758 and .id != 759 and .id != 760)) | .data.ipad_more_sections |= map(if .id == 764 then .title = "个人设置" elif .id == 763 then .title = "客服中心" else . end) | .data.ipad_more_sections |= map(select(.id != 965)) | del(.data.ipad_upper_sections)
