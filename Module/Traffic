@@ -1,4 +1,4 @@
-name: 机场流量信息
+name: 机场信息
 
 compat_arguments:
   订阅链接: 'URL'
