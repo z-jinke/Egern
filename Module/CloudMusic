@@ -13,17 +13,7 @@ compat_arguments:
   排行榜单: 'true'
   问候语句: 'false'
 
-header_rewrites:
-- replace:
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/e?api\/(?:batch|homepage\/block\/page|v\d\/(?:resource\/comment\/floor\/get|user\/detail\/\d+|discovery\/recommend\/songs|playlist\/detail)|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show)|user\/follow\/users\/mixed\/get|link\/home\/framework\/tab|link\/position\/show\/resource|link\/page\/discovery\/resource\/show|mine\/(?:collect|rn)\/header\/info|vipnewcenter\/app\/resource\/newaccountpage|music-vip-membership\/(?:client|front)\/vip\/info|playlist\/privilege|search\/complex\/page)
-    name: x-aeapi
-    value: 'false'
-    type: request
-
 map_locals:
-- match: ^https:\/\/interface\d?\.music\.163\.com\/e?api\/vip\/cashier\/tspopup\/get
-  status_code: 200
-  body: ' '
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:delivery\/(batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/)
   status_code: 200
   headers:
