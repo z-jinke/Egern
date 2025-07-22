@@ -22,9 +22,6 @@ body_rewrites:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
     filter: .data.items |= map(select(.goto == "av" and .card_goto == "av"))
 - response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
-    filter: .data.config.trigger_loadmore_left_line_num = 3
-- response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
     filter: .data.vip.status = 1 | .data.vip.type = 2 | .data.vip.role = 3 | .data.vip.due_date = 2524608000000
 - response_jq:
@@ -59,14 +56,6 @@ map_locals:
 - match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.view\.v1\.View\/TFInfo$
   body: AAAAAAIIAQ==
   binary: true
-
-scriptings:
-- http_response:
-    name: 广告处理
-    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
-    script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.js
-    body_required: true
-    binary_body: true
 
 mitm:
   hostnames:
