@@ -9,18 +9,17 @@ compat_arguments:
   歌词源服务商: QQMusic
   日志等级: OFF
 
-header_rewrites:
-  - replace:
-      match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize$
-      name: if-none-match
-      value: '*'
-      type: request
-      binary_body: true
 
+url_rewrites:
+- match: ^https?:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
+  location: https://$1.spotify.com/artistview/v1/artist/$2&platform=ipad
+  status_code: 307
 map_locals:
-  - match: ^https:\/\/[\w.-]+\.spotify\.com\/pendragon\/
-    status_code: 200
-    body: '{}'
+- match: ^https?:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: '{}'
 
 scriptings:
   - http_response:
