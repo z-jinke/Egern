@@ -2,20 +2,14 @@ name: Spotify音乐
 
 compat_arguments:
   移除创建按钮: 'false'
-  歌词处理类型: Translate,External
-  翻译器源语言: AUTO
-  翻译目标语言: ZH-HANS
-  翻译源服务商: Google
-  歌词源服务商: QQMusic
-  日志等级: OFF
-
+  启用设备接力: 'true'
 
 url_rewrites:
-- match: ^https?:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
+- match: ^https:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
   location: https://$1.spotify.com/artistview/v1/artist/$2&platform=ipad
   status_code: 307
 map_locals:
-- match: ^https?:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
+- match: ^https:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
   status_code: 200
   headers:
     Content-Type: application/json
@@ -23,52 +17,17 @@ map_locals:
 
 scriptings:
   - http_response:
-      name: 歌词数据
-      match: ^https?:\/\/api\.spotify\.com\/v1\/tracks\?
-      script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
-      arguments:
-        _compat.$argument: '{"Types":"{{{歌词处理类型}}}","lyricLang":"{{{翻译器源语言}}}","transLang":"{{{翻译目标语言}}}","Vendor":"{{{翻译源服务商}}}","LrcVendor":"{{{歌词源服务商}}}","LogLevel":"{{{日志等级}}}"}'
-      body_required: true
-      engine: webview
-
-  - http_request:
-      name: 请求歌词
-      match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+
-      script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
-      arguments:
-        _compat.$argument: '{"Types":"{{{歌词处理类型}}}","lyricLang":"{{{翻译器源语言}}}","transLang":"{{{翻译目标语言}}}","Vendor":"{{{翻译源服务商}}}","LrcVendor":"{{{歌词源服务商}}}","LogLevel":"{{{日志等级}}}"}'
-      body_required: true
-      binary_body: true
-
-  - http_response:
-      name: 翻译歌词
-      match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+.*subtype=Translate
-      script_url: https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
-      arguments:
-        _compat.$argument: '{"Types":"{{{歌词处理类型}}}","lyricLang":"{{{翻译器源语言}}}","transLang":"{{{翻译目标语言}}}","Vendor":"{{{翻译源服务商}}}","LrcVendor":"{{{歌词源服务商}}}","LogLevel":"{{{日志等级}}}"}'
-      body_required: true
-      binary_body: true
-
-  - http_response:
-      name: 外部歌词
-      match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+.*subtype=External
-      script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-      arguments:
-        _compat.$argument: '{"Types":"{{{歌词处理类型}}}","lyricLang":"{{{翻译器源语言}}}","transLang":"{{{翻译目标语言}}}","Vendor":"{{{翻译源服务商}}}","LrcVendor":"{{{歌词源服务商}}}","LogLevel":"{{{日志等级}}}"}'
-      body_required: true
-      binary_body: true
-
-  - http_response:
       name: 解锁处理
       match: ^https:\/\/[\w.-]+\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
       script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
       arguments:
-        _compat.$argument: '{"tab":"{{{关闭创建按钮}}}"}'
+        _compat.$argument: '{"tab":"{{{关闭创建按钮}}}","useractivity":"{{{Apple设备接力}}}}'
       body_required: true
       binary_body: true
 
 mitm:
   hostnames:
     includes:
-      - api.spotify.com
+      - guc3-spclient.spotify.com
+      - gae2-spclient.spotify.com
       - spclient.wg.spotify.com
