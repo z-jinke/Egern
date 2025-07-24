@@ -26,5 +26,5 @@ scriptings:
 mitm:
   hostnames:
     includes:
-    - *.googlevideo.com
+    - '*.googlevideo.com'
     - youtubei.googleapis.com
