@@ -1,6 +1,6 @@
 (async () => {
   try {
-    const { url, reset_day, title, icon, color, expire } = getArgs();
+    const { url, reset_day: argResetDay, title, icon, color, expire: argExpire } = getArgs();
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -9,12 +9,15 @@
     const remaining = total - used;
     const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
+    // 优先使用参数 reset_day，否则使用订阅中的 reset_day 字段（如果有）
+    const resetDay = argResetDay || info.reset_day;
+
     const content = [
       `使用进度：${percentage}%`,
       `已用流量：${bytesToSize(used)}`,
       `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
-      reset_day ? `重置日期：${getRemainingDays(parseInt(reset_day))} 天后` : `重置：无信息`,
-      expire || info.expire ? `订阅到期：${formatTime(expire || info.expire)}` : `到期：无信息`
+      resetDay ? `重置日期：${getRemainingDays(parseInt(resetDay))} 天后` : `重置：无信息`,
+      argExpire || info.expire ? `订阅到期：${formatTime(argExpire || info.expire)}` : `到期：无信息`
     ];
 
     $done({
@@ -47,15 +50,15 @@ async function getDataInfo(url) {
     $httpClient.get({ url, headers }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
 
-      const info = Object.entries(resp.headers).find(([k]) =>
-        k.toLowerCase() === "subscription-userinfo"
-      );
-      if (!info) return reject("未找到订阅信息");
+      const headerKey = Object.keys(resp.headers).find(k => k.toLowerCase() === "subscription-userinfo");
+      const rawInfo = headerKey ? resp.headers[headerKey] : null;
+      if (!rawInfo) return reject("未找到订阅信息");
 
-      const pairs = info[1].match(/\w+=[\d.eE+-]+/g);
+      const pairs = rawInfo.match(/\w+=[\d.eE+-]+/g);
       if (!pairs) return reject("无法解析订阅数据");
 
-      resolve(Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v))));
+      const info = Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v)));
+      resolve(info);
     });
   });
 }
@@ -64,10 +67,12 @@ async function getDataInfo(url) {
 function getRemainingDays(day) {
   const now = new Date();
   const today = now.getDate();
-  const daysInThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const nextMonthDays = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
-  const resetDay = Math.min(day, today < day ? daysInThisMonth : nextMonthDays);
-  return today < day ? day - today : daysInThisMonth - today + resetDay;
+  const isNextMonth = today >= day;
+  const month = now.getMonth() + (isNextMonth ? 1 : 0);
+  const year = now.getFullYear();
+  const resetDate = new Date(year, month, day);
+  const diff = Math.ceil((resetDate - now) / 86400000);
+  return diff > 0 ? diff : 0;
 }
 
 // 流量格式化
