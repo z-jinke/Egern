@@ -16,8 +16,5 @@ scriptings:
 
 panels:
 - name: 订阅处理
-  title: '机场信息'
-  content: |
-    名称：{{airport_name}}
-    流量：{{used}} / {{total}}
-    剩余：{{expire_day}} 天
+  title: '{{{机场名称}}}'
+  content: '{{content}}'
