@@ -1,6 +1,6 @@
-(async () => {
+((async () => {
   try {
-    const { url, title, icon, color, expire } = getArgs(); // 不再读取 reset_day
+    const { url, title, icon, color, expire } = getArgs();
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -11,13 +11,10 @@
 
     const content = [
       `使用进度：${percentage}%`,
+      `总计流量：${bytesToSize(total)}`,
       `已用流量：${bytesToSize(used)}`,
       `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`
     ];
-
-    if ("reset_day" in info) {
-      content.push(`重置日期：${getRemainingDays(info.reset_day)} 天后`);
-    }
 
     content.push(
       expire || info.expire
@@ -53,7 +50,7 @@ async function getDataInfo(url) {
   const headers = {
     "User-Agent": "Quantumult X",
     "X-Device-Model": "iPhone13,2",
-    "X-OS-Version": "16.5",
+    "X-OS-Version": "18.5",
     "X-App-Version": "1.1.6"
   };
 
@@ -75,16 +72,6 @@ async function getDataInfo(url) {
       })));
     });
   });
-}
-
-// 计算距离下次重置还有几天
-function getRemainingDays(day) {
-  const now = new Date();
-  const today = now.getDate();
-  const daysInThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const nextMonthDays = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
-  const resetDay = Math.min(day, today < day ? daysInThisMonth : nextMonthDays);
-  return today < day ? day - today : daysInThisMonth - today + resetDay;
 }
 
 // 格式化流量单位
