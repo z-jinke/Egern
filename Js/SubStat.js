@@ -10,12 +10,11 @@
     const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
     const content = [
-      dateHeader ? `更新时间：${formatTime(new Date(dateHeader).getTime())}` : `更新时间：无信息`,
-      `使用进度：${percentage}%`,
-      `已用流量：${bytesToSize(used)}`,
-      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      dateHeader ? `更新时间：${formatTime(new Date(dateHeader).getTime(), true)}` : `更新时间：无信息`,
       `总计流量：${bytesToSize(total)}`,
-      expire || info.expire ? `订阅到期：${formatTime(expire || info.expire)}` : `到期：无信息`
+      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      `使用进度：${percentage}%`,
+      expire || info.expire ? `订阅到期：${formatTime(expire || info.expire, false)}` : `到期：无信息`
     ];
 
     $done({
@@ -72,12 +71,15 @@ function bytesToSize(bytes) {
   return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
 }
 
-// 格式化时间戳或日期对象
-function formatTime(time) {
+// 格式化时间（带参控制是否显示时分）
+function formatTime(time, showTime = false) {
   let t = typeof time === "string" ? parseInt(time) : time;
   if (t < 1e12) t *= 1000;
   const d = new Date(t);
-  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  if (isNaN(d)) return "无效日期";
+  const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  if (!showTime) return dateStr;
+  return `${dateStr} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function pad(n) {
