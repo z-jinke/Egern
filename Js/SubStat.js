@@ -11,9 +11,9 @@
 
     const content = [
       `使用进度：${percentage}%`,
-      `已用流量：${bytesToSize(used)}`,
-      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
       `总计流量：${bytesToSize(total)}`,
+      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      `已用流量：${bytesToSize(used)}`,
       expire || info.expire ? `订阅到期：${formatTime(expire || info.expire)}` : `到期：无信息`
     ];
 
