@@ -1,6 +1,6 @@
 (async () => {
   try {
-    const { url, reset_day: argResetDay, title, icon, color, expire: argExpire } = getArgs();
+    const { url, title, icon, color, expire } = getArgs(); // 去掉 reset_day
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -9,16 +9,21 @@
     const remaining = total - used;
     const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
-    // 优先使用参数 reset_day，否则使用订阅中的 reset_day 字段（如果有）
-    const resetDay = argResetDay || info.reset_day;
-
     const content = [
       `使用进度：${percentage}%`,
       `已用流量：${bytesToSize(used)}`,
       `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
-      resetDay ? `重置日期：${getRemainingDays(parseInt(resetDay))} 天后` : `重置：无信息`,
-      argExpire || info.expire ? `订阅到期：${formatTime(argExpire || info.expire)}` : `到期：无信息`
     ];
+
+    if ("reset_day" in info) {
+      content.push(`重置日期：${getRemainingDays(info.reset_day)} 天后`);
+    }
+
+    content.push(
+      expire || info.expire
+        ? `订阅到期：${formatTime(expire || info.expire)}`
+        : `到期：无信息`
+    );
 
     $done({
       title: title || "订阅用量",
@@ -43,39 +48,40 @@ function getArgs() {
   return Object.fromEntries(new URLSearchParams($argument));
 }
 
-// 获取并解析订阅信息头部数据
+// 获取并解析订阅信息
 async function getDataInfo(url) {
   const headers = { "User-Agent": "Shadowrocket" };
   return new Promise((resolve, reject) => {
     $httpClient.get({ url, headers }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
 
-      const headerKey = Object.keys(resp.headers).find(k => k.toLowerCase() === "subscription-userinfo");
-      const rawInfo = headerKey ? resp.headers[headerKey] : null;
-      if (!rawInfo) return reject("未找到订阅信息");
+      const info = Object.entries(resp.headers).find(([k]) =>
+        k.toLowerCase() === "subscription-userinfo"
+      );
+      if (!info) return reject("未找到订阅信息");
 
-      const pairs = rawInfo.match(/\w+=[\d.eE+-]+/g);
+      const pairs = info[1].match(/\w+=[\d.eE+-]+/g);
       if (!pairs) return reject("无法解析订阅数据");
 
-      const info = Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v)));
-      resolve(info);
+      resolve(Object.fromEntries(pairs.map(i => {
+        const [k, v] = i.split("=");
+        return [k, +v];
+      })));
     });
   });
 }
 
-// 计算重置日距离
+// 计算距离下一个重置日还有几天
 function getRemainingDays(day) {
   const now = new Date();
   const today = now.getDate();
-  const isNextMonth = today >= day;
-  const month = now.getMonth() + (isNextMonth ? 1 : 0);
-  const year = now.getFullYear();
-  const resetDate = new Date(year, month, day);
-  const diff = Math.ceil((resetDate - now) / 86400000);
-  return diff > 0 ? diff : 0;
+  const daysInThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const nextMonthDays = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
+  const resetDay = Math.min(day, today < day ? daysInThisMonth : nextMonthDays);
+  return today < day ? day - today : daysInThisMonth - today + resetDay;
 }
 
-// 流量格式化
+// 格式化流量
 function bytesToSize(bytes) {
   if (bytes === 0) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
