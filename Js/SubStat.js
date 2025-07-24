@@ -1,6 +1,6 @@
 (async () => {
   try {
-    const { url, title, icon, color, expire } = getArgs(); // 去掉 reset_day
+    const { url, title, icon, color, expire } = getArgs(); // 不再读取 reset_day
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -12,7 +12,7 @@
     const content = [
       `使用进度：${percentage}%`,
       `已用流量：${bytesToSize(used)}`,
-      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`
     ];
 
     if ("reset_day" in info) {
@@ -29,7 +29,7 @@
       title: title || "订阅用量",
       content: content.join("\n"),
       icon: icon || "tornado",
-      "icon-color": color || "#DF4688",
+      "icon-color": color || "#DF4688"
     });
 
   } catch (err) {
@@ -38,7 +38,7 @@
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
       icon: "exclamationmark.triangle",
-      "icon-color": "#CB1B45",
+      "icon-color": "#CB1B45"
     });
   }
 })();
@@ -48,9 +48,15 @@ function getArgs() {
   return Object.fromEntries(new URLSearchParams($argument));
 }
 
-// 获取并解析订阅信息
+// 请求订阅数据（伪装为 Quantumult X）
 async function getDataInfo(url) {
-  const headers = { "User-Agent": "Shadowrocket" };
+  const headers = {
+    "User-Agent": "Quantumult X",
+    "X-Device-Model": "iPhone13,2",
+    "X-OS-Version": "16.5",
+    "X-App-Version": "1.1.6"
+  };
+
   return new Promise((resolve, reject) => {
     $httpClient.get({ url, headers }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
@@ -71,7 +77,7 @@ async function getDataInfo(url) {
   });
 }
 
-// 计算距离下一个重置日还有几天
+// 计算距离下次重置还有几天
 function getRemainingDays(day) {
   const now = new Date();
   const today = now.getDate();
@@ -81,7 +87,7 @@ function getRemainingDays(day) {
   return today < day ? day - today : daysInThisMonth - today + resetDay;
 }
 
-// 格式化流量
+// 格式化流量单位
 function bytesToSize(bytes) {
   if (bytes === 0) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
