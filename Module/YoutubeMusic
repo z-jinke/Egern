@@ -1,12 +1,12 @@
 name: Youtube(Music)
 
 compat_arguments:
+  启用调试模式: 'false'
   关闭Shorts: 'true'
   关闭上传按钮: 'true'
-  字幕翻译语言: zh-Hans
   关闭选段按钮: 'true'
+  字幕翻译语言: zh-Hans
   歌词翻译语言: zh-Hans
-  启用调试模式: 'false'
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
@@ -19,7 +19,7 @@ scriptings:
     match: ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
     arguments:
-      _compat.$argument: '{"lyricLang":"{{{歌词翻译语言}}}","captionLang":"{{{字幕翻译语言}}}","blockUpload","{{{关闭上传按钮}}}","blockImmersiv","{{{关闭选段按钮}}}","blockShorts","{{{关闭Shorts}}}","debug","{{{启用调试模式}}}}'
+      _compat.$argument: '{"lyricLang":"{{{歌词翻译语言}}}","captionLang":"{{{字幕翻译语言}}}","blockUpload":{{{关闭上传按钮}}},"blockImmersiv":{{{关闭选段按钮}}},"blockShorts":{{{关闭Shorts}}},"debug":{{{启用调试模式}}}}'
     body_required: true
     binary_body: true
 
