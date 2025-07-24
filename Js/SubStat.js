@@ -1,6 +1,6 @@
 (async () => {
   try {
-    const { url, reset_day, title, icon, color, expire } = getArgs();
+    const { url, title, icon, color, expire } = getArgs();
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -13,7 +13,7 @@
       `使用进度：${percentage}%`,
       `已用流量：${bytesToSize(used)}`,
       `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
-      reset_day ? `重置日期：${getRemainingDays(parseInt(reset_day))} 天后` : `重置：无信息`,
+      `总计流量：${bytesToSize(total)}`,
       expire || info.expire ? `订阅到期：${formatTime(expire || info.expire)}` : `到期：无信息`
     ];
 
@@ -58,16 +58,6 @@ async function getDataInfo(url) {
       resolve(Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v))));
     });
   });
-}
-
-// 计算重置日距离
-function getRemainingDays(day) {
-  const now = new Date();
-  const today = now.getDate();
-  const daysInThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const nextMonthDays = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
-  const resetDay = Math.min(day, today < day ? daysInThisMonth : nextMonthDays);
-  return today < day ? day - today : daysInThisMonth - today + resetDay;
 }
 
 // 流量格式化
