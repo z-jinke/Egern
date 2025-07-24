@@ -50,7 +50,7 @@ async function getDataInfo(url) {
   const headers = {
     "User-Agent": "Quantumult X",
     "X-Device-Model": "iPhone13,2",
-    "X-OS-Version": "18.5",
+    "X-OS-Version": "16.5",
     "X-App-Version": "1.1.6"
   };
 
