@@ -21,7 +21,7 @@ scriptings:
       match: ^https:\/\/[\w.-]+\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
       script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
       arguments:
-        _compat.$argument: '{"tab":"{{{关闭创建按钮}}}","useractivity":"{{{Apple设备接力}}}}'
+        _compat.$argument: '{"tab":{{{关闭创建按钮}}},"useractivity":{{{Apple设备接力}}}}'
       body_required: true
       binary_body: true
 
