@@ -1,6 +1,6 @@
-((async () => {
+(async () => {
   try {
-    const { url, title, icon, color, expire } = getArgs();
+    const { url, reset_day, title, icon, color, expire } = getArgs();
     const info = await getDataInfo(url);
     if (!info) return $done({});
 
@@ -11,22 +11,17 @@
 
     const content = [
       `使用进度：${percentage}%`,
-      `总计流量：${bytesToSize(total)}`,
       `已用流量：${bytesToSize(used)}`,
-      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`
+      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      reset_day ? `重置日期：${getRemainingDays(parseInt(reset_day))} 天后` : `重置：无信息`,
+      expire || info.expire ? `订阅到期：${formatTime(expire || info.expire)}` : `到期：无信息`
     ];
-
-    content.push(
-      expire || info.expire
-        ? `订阅到期：${formatTime(expire || info.expire)}`
-        : `到期：无信息`
-    );
 
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
       icon: icon || "tornado",
-      "icon-color": color || "#DF4688"
+      "icon-color": color || "#DF4688",
     });
 
   } catch (err) {
@@ -35,7 +30,7 @@
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
       icon: "exclamationmark.triangle",
-      "icon-color": "#CB1B45"
+      "icon-color": "#CB1B45",
     });
   }
 })();
@@ -45,15 +40,9 @@ function getArgs() {
   return Object.fromEntries(new URLSearchParams($argument));
 }
 
-// 请求订阅数据（伪装为 Quantumult X）
+// 获取并解析订阅信息头部数据
 async function getDataInfo(url) {
-  const headers = {
-    "User-Agent": "Quantumult X",
-    "X-Device-Model": "iPhone13,2",
-    "X-OS-Version": "16.5",
-    "X-App-Version": "1.1.6"
-  };
-
+  const headers = { "User-Agent": "Shadowrocket" };
   return new Promise((resolve, reject) => {
     $httpClient.get({ url, headers }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
@@ -66,15 +55,22 @@ async function getDataInfo(url) {
       const pairs = info[1].match(/\w+=[\d.eE+-]+/g);
       if (!pairs) return reject("无法解析订阅数据");
 
-      resolve(Object.fromEntries(pairs.map(i => {
-        const [k, v] = i.split("=");
-        return [k, +v];
-      })));
+      resolve(Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v))));
     });
   });
 }
 
-// 格式化流量单位
+// 计算重置日距离
+function getRemainingDays(day) {
+  const now = new Date();
+  const today = now.getDate();
+  const daysInThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const nextMonthDays = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
+  const resetDay = Math.min(day, today < day ? daysInThisMonth : nextMonthDays);
+  return today < day ? day - today : daysInThisMonth - today + resetDay;
+}
+
+// 流量格式化
 function bytesToSize(bytes) {
   if (bytes === 0) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
