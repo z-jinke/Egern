@@ -4,12 +4,36 @@ compat_arguments:
   移除创建按钮: 'false'
   启用设备接力: 'true'
 
+rules:
+- and:
+    match:
+    - domain:
+        match: spclient.wg.spotify.com
+    - protocol:
+        match: QUIC
+    policy: REJECT
+- and:
+    match:
+    - domain:
+        match: gae2-spclient.spotify.com
+    - protocol:
+        match: QUIC
+    policy: REJECT
+- and:
+    match:
+    - domain:
+        match: guc3-spclient.spotify.com
+    - protocol:
+        match: QUIC
+    policy: REJECT
+
 url_rewrites:
-- match: ^https:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
+- match: ^https?:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
   location: https://$1.spotify.com/artistview/v1/artist/$2&platform=ipad
   status_code: 307
+
 map_locals:
-- match: ^https:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
+- match: ^https?:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
   status_code: 200
   headers:
     Content-Type: application/json
@@ -18,7 +42,7 @@ map_locals:
 scriptings:
   - http_response:
       name: 解锁处理
-      match: ^https:\/\/[\w.-]+\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
+      match: ^https:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
       script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
       arguments:
         _compat.$argument: '{"tab":{{{关闭创建按钮}}},"useractivity":{{{Apple设备接力}}}}'
@@ -31,3 +55,7 @@ mitm:
       - guc3-spclient.spotify.com
       - gae2-spclient.spotify.com
       - spclient.wg.spotify.com
+
+
+
+
