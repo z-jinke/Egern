@@ -1,8 +1,9 @@
 (async () => {
   try {
-    const { url, title, icon, color, expire } = getArgs();
+    const { url, title, icon, color, expire } = Object.fromEntries(new URLSearchParams($argument));
+    if (!url) return $done({ title: "错误", content: "缺少url参数" });
+
     const { info, dateHeader } = await getDataInfo(url);
-    if (!info) return $done({});
 
     const used = (info.download || 0) + (info.upload || 0);
     const total = info.total || 0;
@@ -25,7 +26,6 @@
     });
 
   } catch (err) {
-    console.log("错误:", err);
     $done({
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
@@ -35,35 +35,48 @@
   }
 })();
 
-// 解析参数
-function getArgs() {
-  return Object.fromEntries(new URLSearchParams($argument));
-}
+/**
+ * 请求订阅信息并解析
+ * @param {string} url 订阅链接
+ * @returns {Promise<{info: Object, dateHeader: string}>}
+ */
+function getDataInfo(url) {
+  const headers = {
+    "User-Agent": "Shadowrocket",
+    "Accept-Encoding": "gzip, deflate"
+  };
 
-// 获取订阅信息与响应时间
-async function getDataInfo(url) {
-  const headers = { "User-Agent": "Shadowrocket" };
   return new Promise((resolve, reject) => {
     $httpClient.get({ url, headers }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
 
-      const dateHeader = resp.headers["Date"] || resp.headers["date"];
+      // 将响应头全部转为小写键名，方便统一处理
+      const lowerHeaders = {};
+      for (const key in resp.headers) {
+        lowerHeaders[key.toLowerCase()] = resp.headers[key];
+      }
 
-      const infoHeader = Object.entries(resp.headers).find(([k]) =>
-        k.toLowerCase() === "subscription-userinfo"
-      );
-      if (!infoHeader) return reject("未找到订阅信息");
+      const dateHeader = lowerHeaders["date"];
+      const infoStr = lowerHeaders["subscription-userinfo"];
+      if (!infoStr) return reject("未找到订阅信息");
 
-      const pairs = infoHeader[1].match(/\w+=[\d.eE+-]+/g);
-      if (!pairs) return reject("无法解析订阅数据");
+      // 解析 key=value 形式的订阅信息
+      const info = {};
+      infoStr.split(";").forEach(pair => {
+        const [k, v] = pair.split("=");
+        if (k && v) info[k.trim()] = Number(v);
+      });
 
-      const info = Object.fromEntries(pairs.map(i => i.split("=").map((v, i) => i ? +v : v)));
       resolve({ info, dateHeader });
     });
   });
 }
 
-// 流量格式化
+/**
+ * 将字节数格式化为可读单位
+ * @param {number} bytes
+ * @returns {string}
+ */
 function bytesToSize(bytes) {
   if (bytes === 0) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
@@ -71,17 +84,29 @@ function bytesToSize(bytes) {
   return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
 }
 
-// 格式化时间（带参控制是否显示时分）
+/**
+ * 格式化时间
+ * @param {number|string} time 时间戳，秒或毫秒
+ * @param {boolean} showTime 是否显示时分
+ * @returns {string}
+ */
 function formatTime(time, showTime = false) {
   let t = typeof time === "string" ? parseInt(time) : time;
-  if (t < 1e12) t *= 1000;
+  if (t < 1e12) t *= 1000; // 统一成毫秒
   const d = new Date(t);
   if (isNaN(d)) return "无效日期";
+
   const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
   if (!showTime) return dateStr;
+
   return `${dateStr} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+/**
+ * 数字补零
+ * @param {number} n
+ * @returns {string}
+ */
 function pad(n) {
   return n < 10 ? "0" + n : n;
 }
