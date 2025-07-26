@@ -6,6 +6,12 @@ compat_arguments:
   底栏漫游: 'false'
   问候语句: 'true'
   排行榜单: 'true'
+  每日推荐: 'false'
+  推荐歌单: 'false'
+  最近常听: 'false'
+  雷达歌单: 'false'
+  专属歌单: 'false'
+  你的歌单: 'false'
 
 map_locals:
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/(?:eapi\/(?:delivery\/(?:batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/|community\/friends\/fans-group\/artist\/group\/|mine\/applet\/redpoint|music\/songshare\/text\/recommend\/|resniche\/position\/play\/new\/|resniche\/tspopup\/show|resource\/comments?\/musiciansaid\/|user\/sub\/artist|ios\/version|mlivestream\/entrance\/playpage\/|link\/position\/show\/strategy|link\/scene\/show\/resource|v1\/content\/exposure\/comment\/banner\/)|w?eapi\/(?:activity\/bonus\/playpage\/time\/query|resource-exposure\/|search\/(?:chart\/|rcmd\/keyword\/|specialkeyword\/)))|eapi\/my\/podcast\/tab\/recommend)
@@ -26,7 +32,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"PRGG":{{{问候语句}}},"PRRK":{{{排行榜单}}}}'
+      _compat.$argument: '{"PRGG":{{{问候语句}}},"PRRK":{{{排行榜单}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"PRMST":{{{专属歌单}}},"PRCN":{{{你的歌单}}}}'
     body_required: true
     binary_body: true
 - http_response:
