@@ -4,6 +4,15 @@ compat_arguments:
   底栏发现: 'true'
   底栏笔记: 'true'
   底栏漫游: 'false'
+  问候语句: 'true'
+  排行榜单: 'true'
+  每日推荐: 'false'
+  推荐歌单: 'false'
+  最近常听: 'true'
+  雷达歌单: 'false'
+  合伙人: 'true'
+  专属歌单: 'true'
+  你的歌单: 'true'
 
 map_locals:
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:delivery\/(batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/)
@@ -41,6 +50,14 @@ map_locals:
   body: ''
 
 scriptings:
+- http_response:
+    name: 推荐处理
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
+    script_url: https://raw.githubusercontent.com/sooyaaabo/Loon/main/Script/NeteaseMusic/NeteaseMusicAds.js
+    arguments:
+      _compat.$argument: '{"PRGG":{{{问候语句}}},"PRRK":{{{排行榜单}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"HMPR":{{{合伙人}}},"PRMST":{{{专属歌单}}},"PRCN":{{{你的歌单}}}}'
+    body_required: true
+    binary_body: true
 - http_response:
     name: 底栏处理
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
