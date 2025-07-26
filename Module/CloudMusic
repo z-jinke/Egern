@@ -25,7 +25,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"PRGG":{{{每日问候语}}}}'
+      _compat.$argument: '{"PRGG":{{{每日问候语}}},"PRRK":{{{每日排行榜}}},"PRDRD":{{{每日推荐}}},"PRSCVPT":{{{推荐歌单}}},"PRST":{{{最近常听}}},"PRRR":{{{雷达歌单}}},"PRMST":{{{专属歌单}}},"PRCN":{{{你的歌单}}}}'
     body_required: true
     binary_body: true
 - http_response:
