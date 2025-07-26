@@ -1,6 +1,7 @@
 name: YouTubeMusic
 
 compat_arguments:
+  启用调试模式: 'false'
   关闭短视频区: 'true'
   关闭上传按钮: 'true'
   关闭选段按钮: 'true'
@@ -14,7 +15,7 @@ map_locals:
 
 scriptings:
 - http_response:
-    name: Youtube 内容处理
+    name: 广告处理
     match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
     arguments:
