@@ -4,7 +4,6 @@ compat_arguments:
   发现: 'true'
   笔记: 'true'
   关注: 'true'
-  问候语句: 'true'
 
 map_locals:
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:delivery\/(batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/)
@@ -44,11 +43,8 @@ map_locals:
 scriptings:
 - http_response:
     name: 主页处理
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
-    script_url: https://raw.githubusercontent.com/sooyaaabo/Loon/main/Script/NeteaseMusic/NeteaseMusicAds.js
-    arguments:
-      _compat.$argument: '{"PRGG":{{{问候语句}}}}'
-    timeout: 20
+    match: ^https:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/rcmd\/resource\/show
+    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
     body_required: true
     binary_body: true
 - http_response:
