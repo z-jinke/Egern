@@ -4,7 +4,7 @@ compat_arguments:
   底栏发现: 'true'
   底栏笔记: 'true'
   底栏漫游: 'false'
-  底栏笔记: 'true'
+  底栏关注: 'true'
 
 map_locals:
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:delivery\/(batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/)
@@ -47,7 +47,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"FX":{{{底栏发现}}},"MY":{{{底栏漫游}}},"DT":{{{底栏笔记}}},"GZ":{{{底栏笔记}}}}'
+      _compat.$argument: '{"FX":{{{底栏发现}}},"MY":{{{底栏漫游}}},"DT":{{{底栏笔记}}},"GZ":{{{底栏关注}}}}'
     body_required: true
     binary_body: true
 - http_response:
