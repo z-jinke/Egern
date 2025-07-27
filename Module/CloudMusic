@@ -6,6 +6,11 @@ compat_arguments:
   关注: 'true'
 
 map_locals:
+- match: ^https:\/\/interface3\.music\.163\.com\/eapi\/link\/page\/(rcmd\/resource\/show|block\/resource\/multi\/refresh)
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: '{}'
 - match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:delivery\/(batch-)?deliver|moment\/tab\/info\/|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance\/)
   status_code: 200
   headers:
