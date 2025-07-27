@@ -1,4 +1,4 @@
-name: Spotify
+name: Spotify音乐
 
 compat_arguments:
   创建按钮: 'true'
