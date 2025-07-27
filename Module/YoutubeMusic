@@ -6,7 +6,6 @@ compat_arguments:
   选段按钮: 'true'
   字幕翻译: zh-Hans
   歌词翻译: zh-Hans
-  调试模式: 'false'
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
@@ -19,7 +18,7 @@ scriptings:
     match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
     arguments:
-      _compat.$argument: '{"lyricLang":"{{{歌词翻译}}}","captionLang":"{{{字幕翻译}}}","blockUpload":{{{上传按钮}}},"blockImmersive":{{{选段按钮}}},"blockShorts":{{{短视频区}}},"debug":{{{调试模式}}}}'
+      _compat.$argument: '{"lyricLang":"{{{歌词翻译}}}","captionLang":"{{{字幕翻译}}}","blockUpload":{{{上传按钮}}},"blockImmersive":{{{选段按钮}}},"blockShorts":{{{短视频区}}}}'
     body_required: true
     binary_body: true
 
