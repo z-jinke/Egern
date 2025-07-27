@@ -3,7 +3,6 @@ name: 网易云音乐
 compat_arguments:
   底栏发现: 'true'
   底栏笔记: 'true'
-  底栏漫游: 'false'
   底栏关注: 'true'
 
 map_locals:
