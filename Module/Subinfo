@@ -8,7 +8,7 @@ compat_arguments:
 scriptings:
 - generic:
     name: 订阅处理
-    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/SubStat.js
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
     arguments:
       _compat.$argument: 'url={{{订阅链接}}}&title={{{机场名称}}}&icon={{{显示图标}}}'
     update_interval: 86400
