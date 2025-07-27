@@ -13,6 +13,7 @@ body_rewrites:
 - response_jq:
     match: ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?
     filter: delpaths([["data","carTips","data","popupInfo"]])
+
 map_locals:
 - match: ^https:\/\/m5\.amap\.com\/ws\/aos\/main\/page\/product\/list\?
   status_code: 200
@@ -76,11 +77,11 @@ map_locals:
   body: '{}'
 
 scriptings:
-  - http_response:
-      name: 广告处理
-      match: ^https:\/\/(?:info|m5|m5-zb)\.amap\.com\/(?:ws\/(?:aos\/perception\/publicTravel\/beforeNavi|bus\/plan\/integrate|c3frontend\/af-(?:hotel|launch)\/page\/main|c3frontend\/af-nearby\/nearby|perception\/drive\/(?:routeInfo|routePlan)|shield\/search\/(?:common\/coupon\/info|poi\/detail|nearbyrec_smart)|shield\/search_bff\/hotword|shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)|faas\/amap-navigation\/(?:card-service-plan-home|main-page)|shield\/frogserver\/aocs\/updatable\/1|shield\/dsp\/profile\/index\/nodefaasv3|valueadded\/alimama\/splash_screen)|boss\/(?:car\/order\/content_info|order_web\/friendly_information)|promotion-web\/resource(?:\/home)?)(?:\?|$)
-      script_url: https://kelee.one/Resource/JavaScript/Amap/Amap_remove_ads.js
-      body_required: true
+- http_response:
+    name: 广告处理
+    match: ^https:\/\/(?:info|m5|m5-zb)\.amap\.com\/ws\/(?:aos\/perception\/publicTravel\/beforeNavi|bus\/plan\/integrate|c3frontend\/af-(?:hotel|launch)\/page\/main|c3frontend\/af-nearby\/nearby|perception\/drive\/(?:routeInfo|routePlan)|shield\/search\/(?:common\/coupon\/info|poi\/detail)|shield\/search_bff\/hotword|shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)|faas\/amap-navigation\/(?:card-service-plan-home|main-page)|shield\/frogserver\/aocs\/updatable\/1|shield\/dsp\/profile\/index\/nodefaasv3|shield\/search\/nearbyrec_smart|valueadded\/alimama\/splash_screen|boss\/(?:car\/order\/content_info|order_web\/friendly_information)|promotion-web\/resource(?:\/home)?\?)
+    script_url: https://kelee.one/Resource/JavaScript/Amap/Amap_remove_ads.js
+    body_required: true
 
 mitm:
   hostnames:
