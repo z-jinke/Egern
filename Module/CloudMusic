@@ -46,7 +46,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"FX":{{{发现}}},"MY":{{{漫游}}},"DT":{{{笔记}}},"GZ":{{{关注}}}}'
+      _compat.$argument: '{"FX":{{{发现}}},"DT":{{{笔记}}},"GZ":{{{关注}}}}'
     body_required: true
     binary_body: true
 - http_response:
