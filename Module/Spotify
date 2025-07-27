@@ -22,7 +22,7 @@ scriptings:
     match: ^https:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
-      _compat.$argument: '[{{{创建按钮}}},{{{设备接力}}}]'
+      _compat.$argument: '{"tab":{{{创建按钮}}},"useractivity":{{{设备接力}}}}'
     timeout: 20
     body_required: true
     binary_body: true
