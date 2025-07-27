@@ -42,12 +42,6 @@ map_locals:
 
 scriptings:
 - http_response:
-    name: 主页处理
-    match: ^https:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/rcmd\/resource\/show
-    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
-    body_required: true
-    binary_body: true
-- http_response:
     name: 底栏处理
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
