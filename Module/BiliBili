@@ -1,50 +1,18 @@
 name: 哔哩哔哩
 
 rules:
-- domain:
-    match: api.biliapi.com
-    policy: REJECT
-- domain:
-    match: app.biliapi.com
-    policy: REJECT
-- domain:
-    match: api.biliapi.net
-    policy: REJECT
-- domain:
-    match: app.biliapi.net
-    policy: REJECT
-
-body_rewrites:
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list
-    filter: .data.list[] |= (.duration = 0 | .begin_time = 1893427200 | .end_time = 1893427200)
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
-    filter: .data.items |= map(select(.goto == "av" and .card_goto == "av"))
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
-    filter: .data.vip.status = 1 | .data.vip.type = 2 | .data.vip.role = 3 | .data.vip.due_date = 2524608000000
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
-    filter: .data |= map(select(.type != "recommend"))
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
-    filter: .data.tab |= map(select(.id != 136117 and .id != 39 and .id != 408260 and .id != 408432)) | .data.top |= map(select(.id != 3500)) | .data.top_more |= [] | .data.bottom |= map(select(.id != 670 and .id != 3511))
-- response_jq:
-    match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
-    filter: .result.modules |= map(select(.module_id != 1639 and .module_id != 1633))
-- response_jq:
-    match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
-    filter: .data.modules |= map(select(.id != 2015 and .id != 2038))
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
-    filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id as $id | [$id] | inside([400,401,402,403,404,622,406,2909,3046,913,514,924,968,990,3525,3547,3549,3550,3555]) | not)) elif .title == "更多服务" then del(.title) | .items |= map(if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) | .items |= map(select(.id as $id | [$id] | inside([812,964]) | not)) else . end)
-- response_jq:
-    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
-    filter: .data.ipad_recommend_sections |= map(select(.id != 758 and .id != 759 and .id != 760)) | .data.ipad_more_sections |= map(if .id == 764 then .title = "个人设置" elif .id == 763 then .title = "客服中心" else . end) | .data.ipad_more_sections |= map(select(.id != 965)) | del(.data.ipad_upper_sections)
-- response_jq:
-    match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/(app-interface\/v2\/index\/feed|app-room\/v1\/index\/getInfoBy(Room|User))\?
-    filter: .data |= (del(.play_together_info, .play_together_info_v2, .activity_banner_info) | if .function_card then .function_card[] = null end | if .new_tab_info.outer_list then .new_tab_info.outer_list |= map(select(.biz_id != 33)) end | if .card_list then .card_list |= map(select(.card_type | IN("banner_v2", "activity_card_v1") | not)) end | reduce ([["show_reserve_status"], false], [["reserve_info", "show_reserve_status"], false], [["shopping_info", "is_show"], 0]) as [$path, $value] (.; if getpath($path) then setpath($path; $value) end))
+- or:
+    match:
+    - domain:
+        match: api.biliapi.net
+    - domain:
+        match: api.biliapi.com
+    - domain:
+        match: app.biliapi.net
+    - domain:
+        match: app.biliapi.com
+    policy: REJECT-DROP
+    disabled: false
 
 map_locals:
 - match: ^https:\/\/(app|api)\.bilibili\.com\/x\/(v2\/splash\/show|vip\/ads)
@@ -64,6 +32,35 @@ map_locals:
 - match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.view\.v1\.View\/TFInfo$
   body: AAAAAAIIAQ==
   binary: true
+
+body_rewrites:
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list
+    filter: .data.list[] |= (.duration = 0 | .begin_time = 1893427200 | .end_time = 1893427200)
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
+    filter: .data.items |= map(select(.goto == "av" and .card_goto == "av"))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
+    filter: .data.vip.status = 1 | .data.vip.type = 2 | .data.vip.role = 3 | .data.vip.due_date = 2524608000000
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
+    filter: .data |= map(select(.type != "recommend"))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
+    filter: .data.tab |= map(select(.id != 136117 and .id != 39 and .id != 408260 and .id != 408432)) | .data.top |= map(select(.id != 3500)) | .data.top_more |= [] | .data.bottom |= map(select(.id != 670 and .id != 3511))
+- response_jq:
+    match: ^https:\/\/api\.bilibili\.com\/pgc\/page\/(bangumi|cinema\/tab|channel)
+    filter: .result.modules? |= map(select(.module_id != 1639 and .module_id != 1633)) | .data.modules? |= map(select(.id != 2015 and .id != 2038))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
+    filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id as $id | [$id] | inside([400,401,402,403,404,622,406,2909,3046,913,514,924,968,990,3525,3547,3549,3550,3555]) | not)) elif .title == "更多服务" then del(.title) | .items |= map(if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) | .items |= map(select(.id as $id | [$id] | inside([812,964]) | not)) else . end)
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
+    filter: .data.ipad_recommend_sections |= map(select(.id != 758 and .id != 759 and .id != 760)) | .data.ipad_more_sections |= map(if .id == 764 then .title = "个人设置" elif .id == 763 then .title = "客服中心" else . end) | .data.ipad_more_sections |= map(select(.id != 965)) | del(.data.ipad_upper_sections)
+- response_jq:
+    match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/(app-interface\/v2\/index\/feed|app-room\/v1\/index\/getInfoBy(Room|User))\?
+    filter: .data |= (del(.play_together_info, .play_together_info_v2, .activity_banner_info) | if .function_card then .function_card[] = null end | if .new_tab_info.outer_list then .new_tab_info.outer_list |= map(select(.biz_id != 33)) end | if .card_list then .card_list |= map(select(.card_type | IN("banner_v2", "activity_card_v1") | not)) end | reduce ([["show_reserve_status"], false], [["reserve_info", "show_reserve_status"], false], [["shopping_info", "is_show"], 0]) as [$path, $value] (.; if getpath($path) then setpath($path; $value) end))
 
 scriptings:
 - http_response:
