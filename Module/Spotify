@@ -30,7 +30,6 @@ scriptings:
       _compat.$argument: '{"Types":"External","LrcVendor":"NeteaseMusic"}'
     body_required: true
 
-scriptings:
 - http_request:
     name: 请求歌词
     match: ^https:\/\/(?:api\.spotify\.com\/v1\/tracks\?|spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(?:.+\?(?:.*)format=json|\w+\?(.*)))
