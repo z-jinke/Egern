@@ -1,10 +1,5 @@
 name: 网易云音乐
 
-compat_arguments:
-  发现: 'true'
-  笔记: 'true'
-  关注: 'true'
-
 map_locals:
 - match: ^https:\/\/interface3\.music\.163\.com\/eapi\/link\/page\/(rcmd\/resource\/show|block\/resource\/multi\/refresh)
   status_code: 200
@@ -51,7 +46,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js
     arguments:
-      _compat.$argument: '{"FX":{{{发现}}},"DT":{{{笔记}}},"GZ":{{{关注}}}}'
+      _compat.$argument: '{"FX":{{{true}}},"DT":{{{true}}},"GZ":{{{true}}}}'
     body_required: true
     binary_body: true
 - http_response:
