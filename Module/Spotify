@@ -1,9 +1,5 @@
 name: Spotify音乐
 
-compat_arguments:
-  创建按钮: 'true'
-  设备接力: 'true'
-
 url_rewrites:
 - match: ^https:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
   location: https://$1.spotify.com/artistview/v1/artist/$2&platform=ipad
@@ -22,8 +18,7 @@ scriptings:
     match: ^https:\/\/(?:gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
-      _compat.$argument: '{"tab":{{{创建按钮}}},"useractivity":{{{设备接力}}}"}'
-    timeout: 20
+      _compat.$argument: '{"tab":true,"useractivity":true}'
     body_required: true
     binary_body: true
 
