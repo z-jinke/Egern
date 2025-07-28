@@ -3,8 +3,6 @@ name: Spotify音乐
 compat_arguments:
   创建按钮: 'true'
   设备接力: 'true'
-  补全歌词: External
-  歌词服务: NeteaseMusic
 
 url_rewrites:
 - match: ^https:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
@@ -29,50 +27,9 @@ scriptings:
     body_required: true
     binary_body: true
 
-- http_response: 
-    name: 拦截歌曲
-    match: ^https:\/\/api\.spotify\.com\/v1\/tracks\?
-    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
-    body_required: true
-
-- http_request: 
-    name: 歌词请求
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json
-    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
-    arguments:
-      _compat.$argument: '{"Types":"{{{补全歌词}}}","LrcVendor":"{{{歌词服务}}}"}'
-    body_required: true
-
-- http_request:
-    name: 歌词请求
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)
-    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
-    arguments:
-      _compat.$argument: '{"Types":"{{{补全歌词}}}","LrcVendor":"{{{歌词服务}}}"}'
-    body_required: true
-    binary_body: true
-
-- http_response: 
-    name: 外部歌词
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json(.*)subtype=External
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-    arguments:
-      _compat.$argument: '{"Types":"{{{补全歌词}}}","LrcVendor":"{{{歌词服务}}}"}'
-    body_required: true
-
-- http_response:
-    name: 外部歌词
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)subtype=External
-    script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-    arguments:
-      _compat.$argument: '{"Types":"{{{补全歌词}}}","LrcVendor":"{{{歌词服务}}}"}'
-    body_required: true
-    binary_body: true
-
 mitm:
   hostnames:
     includes:
     - gae2-spclient.spotify.com
     - guc3-spclient.spotify.com
-    - api.spotify.com
     - spclient.wg.spotify.com
