@@ -1,12 +1,5 @@
 name: YouTube(Mic)
 
-compat_arguments:
-  短视频区: 'true'
-  上传按钮: 'true'
-  选段按钮: 'true'
-  字幕翻译: zh-Hans
-  歌词翻译: zh-Hans
-
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
   status_code: 200
@@ -18,7 +11,7 @@ scriptings:
     match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
     arguments:
-      _compat.$argument: '{"lyricLang":"{{{歌词翻译}}}","captionLang":"{{{字幕翻译}}}","blockUpload":{{{上传按钮}}},"blockImmersive":{{{选段按钮}}},"blockShorts":{{{短视频区}}}}'
+      _compat.$argument: '{"lyricLang":"zh-Hans","captionLang":"zh-Hans","blockUpload":true,"blockImmersive":true,"blockShorts":true}'
     body_required: true
     binary_body: true
 
