@@ -34,14 +34,6 @@ scriptings:
       _compat.$argument: '{"GZ":true,"DT":true,"FX":true}'
     body_required: true
     binary_body: true
-- http_response:
-    name: 推荐、home、主页
-    match: ^https:\/\/interface\d?\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
-    script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
-    arguments:
-      _compat.$argument: '{"PRGG":true}'
-    body_required: true
-    binary_body: true
 
 mitm:
   hostnames:
