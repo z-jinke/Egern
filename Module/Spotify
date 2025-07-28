@@ -33,8 +33,6 @@ scriptings:
     name: 拦截歌曲
     match: ^https:\/\/api\.spotify\.com\/v1\/tracks\?
     script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
-    arguments:
-      _compat.$argument: '{"Types":"{{{补全歌词}}}","LrcVendor":"{{{歌词服务}}}"}'
     body_required: true
 
 - http_request: 
