@@ -1,23 +1,28 @@
+// 主函数：获取订阅信息并显示
 (async () => {
   try {
+    // 解析参数
     const { url, title, icon, color, expire } = Object.fromEntries(new URLSearchParams($argument));
     if (!url) return $done({ title: "错误", content: "缺少url参数" });
 
-    const { info, dateHeader } = await getDataInfo(url);
+    // 获取订阅信息
+    const info = await getDataInfo(url);
 
+    // 计算用量
     const used = (info.download || 0) + (info.upload || 0);
     const total = info.total || 0;
-    const remaining = total - used;
+    const remaining = Math.max(total - used, 0);
     const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
+    // 拼接展示内容
     const content = [
-      dateHeader ? `更新时间：${formatTime(new Date(dateHeader).getTime(), true)}` : `更新时间：无信息`,
       `总计流量：${bytesToSize(total)}`,
-      `剩余流量：${bytesToSize(remaining >= 0 ? remaining : 0)}`,
+      `剩余流量：${bytesToSize(remaining)}`,
       `使用进度：${percentage}%`,
-      expire || info.expire ? `订阅到期：${formatTime(expire || info.expire, false)}` : `到期：无信息`
+      (expire || info.expire) ? `订阅到期：${formatDate(expire || info.expire)}` : `到期：无信息`
     ];
 
+    // 输出结果
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
@@ -26,6 +31,7 @@
     });
 
   } catch (err) {
+    // 异常处理
     $done({
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
@@ -36,77 +42,55 @@
 })();
 
 /**
- * 请求订阅信息并解析
- * @param {string} url 订阅链接
- * @returns {Promise<{info: Object, dateHeader: string}>}
+ * 获取订阅信息
+ * @param {string} url
+ * @returns {Promise<Object>}
  */
 function getDataInfo(url) {
-  const headers = {
-    "User-Agent": "Shadowrocket",
-    "Accept-Encoding": "gzip, deflate"
-  };
-
   return new Promise((resolve, reject) => {
-    $httpClient.get({ url, headers }, (err, resp) => {
+    $httpClient.get({
+      url,
+      headers: { "User-Agent": "Shadowrocket", "Accept-Encoding": "gzip, deflate" }
+    }, (err, resp) => {
       if (err || resp.status !== 200) return reject("请求失败");
 
-      // 将响应头全部转为小写键名，方便统一处理
-      const lowerHeaders = {};
-      for (const key in resp.headers) {
-        lowerHeaders[key.toLowerCase()] = resp.headers[key];
-      }
+      // 将响应头键名转小写
+      const headers = Object.fromEntries(
+        Object.entries(resp.headers).map(([k, v]) => [k.toLowerCase(), v])
+      );
 
-      const dateHeader = lowerHeaders["date"];
-      const infoStr = lowerHeaders["subscription-userinfo"];
+      // 从响应头中取订阅用量信息
+      const infoStr = headers["subscription-userinfo"];
       if (!infoStr) return reject("未找到订阅信息");
 
-      // 解析 key=value 形式的订阅信息
+      // 解析 key=value 格式的数据
       const info = {};
       infoStr.split(";").forEach(pair => {
         const [k, v] = pair.split("=");
         if (k && v) info[k.trim()] = Number(v);
       });
 
-      resolve({ info, dateHeader });
+      resolve(info);
     });
   });
 }
 
 /**
- * 将字节数格式化为可读单位
- * @param {number} bytes
- * @returns {string}
+ * 字节数转可读单位
  */
 function bytesToSize(bytes) {
-  if (bytes === 0) return "0B";
+  if (!bytes) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
 }
 
 /**
- * 格式化时间
- * @param {number|string} time 时间戳，秒或毫秒
- * @param {boolean} showTime 是否显示时分
- * @returns {string}
+ * 格式化日期（仅显示年月日）
  */
-function formatTime(time, showTime = false) {
+function formatDate(time) {
   let t = typeof time === "string" ? parseInt(time) : time;
-  if (t < 1e12) t *= 1000; // 统一成毫秒
+  if (t < 1e12) t *= 1000; // 秒转毫秒
   const d = new Date(t);
-  if (isNaN(d)) return "无效日期";
-
-  const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-  if (!showTime) return dateStr;
-
-  return `${dateStr} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-/**
- * 数字补零
- * @param {number} n
- * @returns {string}
- */
-function pad(n) {
-  return n < 10 ? "0" + n : n;
+  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
