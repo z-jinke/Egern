@@ -22,9 +22,37 @@ scriptings:
     body_required: true
     binary_body: true
 
+- http_response:
+    name: 拦截歌曲
+    match: ^https:\/\/api\.spotify\.com\/v1\/tracks\?
+    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
+    arguments:
+      _compat.$argument: Types="External"&LrcVendor="NeteaseMusic"
+    body_required: true
+
+scriptings:
+- http_request:
+    name: 请求歌词
+    match: ^https:\/\/(?:api\.spotify\.com\/v1\/tracks\?|spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(?:.+\?(?:.*)format=json|\w+\?(.*)))
+    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
+    arguments:
+      _compat.$argument: Types="External"&LrcVendor="NeteaseMusic"
+    body_required: true
+    binary_body: true
+
+- http_response: 
+    name: 补充歌词
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(?:.+\?(?:.*)format=json(.*)subtype=External|\w+\?(.*)subtype=External)
+    script_url: https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
+    arguments:
+      _compat.$argument: Types="External"&LrcVendor="NeteaseMusic"
+    body_required: true
+    binary_body: true
+
 mitm:
   hostnames:
     includes:
     - gae2-spclient.spotify.com
     - guc3-spclient.spotify.com
+    - api.spotify.com
     - spclient.wg.spotify.com
