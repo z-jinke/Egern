@@ -3,14 +3,13 @@ name: 节点信息
 compat_arguments:
   订阅链接: 'URL'
   机场名称: 机场订阅
-  显示图标: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Available_1.png
-
+ 
 scriptings:
 - generic:
     name: 订阅处理
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
     arguments:
-      _compat.$argument: 'url={{{订阅链接}}}&title={{{机场名称}}}&icon={{{显示图标}}}'
+      _compat.$argument: 'url={{{订阅链接}}}&title={{{机场名称}}}'
     update_interval: 86400
     timeout: 10
 
