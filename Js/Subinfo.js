@@ -26,7 +26,7 @@
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
-      icon: icon || "network",
+      icon: icon || "server.rack",
       "icon-color": color || "#1E90FF",
     });
 
