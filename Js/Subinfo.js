@@ -26,8 +26,8 @@
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
-      icon: icon || "arrow.up.arrow.down.circle",
-      "icon-color": color || "#1E90FF",
+      icon: icon || "arrow.up.arrow.down",
+      "icon-color": color || "#DF4688",
     });
 
   } catch (err) {
@@ -36,7 +36,7 @@
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
       icon: "exclamationmark.triangle",
-      "icon-color": "#FF4500",
+      "icon-color": "#CB1B45",
     });
   }
 })();
@@ -66,8 +66,8 @@ function getDataInfo(url) {
       // 解析 key=value 格式的数据
       const info = {};
       infoStr.split(";").forEach(pair => {
-        const [k, v] = pair.split("=").map(s => s.trim());
-        if (k && v) info[k] = Number(v);
+        const [k, v] = pair.split("=");
+        if (k && v) info[k.trim()] = Number(v);
       });
 
       resolve(info);
