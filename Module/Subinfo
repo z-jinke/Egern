@@ -9,7 +9,7 @@ scriptings:
     name: 订阅处理
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
     arguments:
-      _compat.$argument: url=URL&title=机场订阅
+      _compat.$argument: 'url={{{订阅链接}}}&title={{{订阅名称}}}'
     update_interval: 86400
     timeout: 10
 
