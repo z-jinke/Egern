@@ -17,5 +17,3 @@ panels:
 - name: 订阅处理
   title: 机场订阅
   content: '{{content}}'
-
-我取消掉了图标链接的参数
