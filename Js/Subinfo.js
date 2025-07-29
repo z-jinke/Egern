@@ -26,7 +26,7 @@
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
-      icon: icon || "gauge",
+      icon: icon || "network",
       "icon-color": color || "#1E90FF",
     });
 
