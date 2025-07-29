@@ -26,7 +26,7 @@
     $done({
       title: title || "订阅用量",
       content: content.join("\n"),
-      icon: icon || "chart.bar",
+      icon: icon || "gauge",
       "icon-color": color || "#1E90FF",
     });
 
