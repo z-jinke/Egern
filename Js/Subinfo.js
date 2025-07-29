@@ -36,7 +36,7 @@
     });
 
     $done({
-      title: "多订阅用量",
+      title: "多订阅面板",
       content: content.join("\n\n"),
       icon: "network", 
       "icon-color": "#1E90FF",
