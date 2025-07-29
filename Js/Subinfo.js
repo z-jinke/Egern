@@ -1,6 +1,11 @@
 (async () => {
   try {
-    const { url, title, expire } = Object.fromEntries(new URLSearchParams($argument));
+    // 这里解析全部参数，防止后续意外引用报错
+    const params = Object.fromEntries(new URLSearchParams($argument));
+    const url = params.url;
+    const title = params.title;
+    const expire = params.expire;
+
     if (!url) return $done({ title: "错误", content: "缺少url参数" });
 
     const info = await getDataInfo(url);
@@ -21,15 +26,50 @@
       title: title || "订阅用量",
       content: content.join("\n"),
       icon: "gauge",
-      "icon-color": "#4CAF50",  // 固定绿色
+      "icon-color": "#4CAF50"
     });
-
   } catch (err) {
     $done({
       title: "订阅信息获取失败",
       content: `错误信息: ${err}`,
       icon: "exclamationmark.triangle",
-      "icon-color": "#CB1B45",
+      "icon-color": "#CB1B45"
     });
   }
 })();
+
+function getDataInfo(url) {
+  return new Promise((resolve, reject) => {
+    $httpClient.get({
+      url,
+      headers: { "User-Agent": "Shadowrocket", "Accept-Encoding": "gzip, deflate" }
+    }, (err, resp) => {
+      if (err || resp.status !== 200) return reject("请求失败");
+      const headers = Object.fromEntries(
+        Object.entries(resp.headers).map(([k, v]) => [k.toLowerCase(), v])
+      );
+      const infoStr = headers["subscription-userinfo"];
+      if (!infoStr) return reject("未找到订阅信息");
+      const info = {};
+      infoStr.split(";").forEach(pair => {
+        const [k, v] = pair.split("=");
+        if (k && v) info[k.trim()] = Number(v);
+      });
+      resolve(info);
+    });
+  });
+}
+
+function bytesToSize(bytes) {
+  if (!bytes) return "0B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
+}
+
+function formatDate(time) {
+  let t = typeof time === "string" ? parseInt(time) : time;
+  if (t < 1e12) t *= 1000;
+  const d = new Date(t);
+  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
