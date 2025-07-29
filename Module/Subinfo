@@ -1,8 +1,9 @@
 name: 节点信息
+
 compat_arguments:
   订阅链接: URL
-  机场名称: 名称
-  
+  机场名称:订阅名称
+
 scriptings:
 - generic:
     name: 订阅处理
@@ -11,7 +12,8 @@ scriptings:
       _compat.$argument: url=订阅链接&title=机场名称
     update_interval: 86400
     timeout: 10
+
 panels:
 - name: 订阅处理
-  title: 订阅处理
+  title: 机场订阅用量
   content: '{{content}}'
