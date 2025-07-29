@@ -1,25 +1,21 @@
 name: 节点信息
 
 compat_arguments:
-  订阅链接1: URL
-  订阅名称1: 名称
-
-  订阅链接2: URL
-  订阅名称2: 名称
-
-  订阅链接3: URL
-  订阅名称3: 名称
+  订阅链接: URL
+  机场名称: 机场订阅
 
 scriptings:
 - generic:
     name: 订阅处理
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
     arguments:
-      _compat.$argument: 'url1={{{订阅链接1}}}&title1={{{订阅名称1}}}&url2={{{订阅链接2}}}&title2={{{订阅名称2}}}&url3={{{订阅链接3}}}&title3={{{订阅名称3}}}'
+      _compat.$argument: url=URL&title=机场订阅
     update_interval: 86400
     timeout: 10
 
 panels:
 - name: 订阅处理
-  title: 订阅用量
+  title: 机场订阅
   content: '{{content}}'
+
+我取消掉了图标链接的参数
