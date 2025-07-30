@@ -89,7 +89,3 @@ DOMAIN-SUFFIX,findmydevice.apple.com
 DOMAIN-SUFFIX,fmfmobile.apple.com
 DOMAIN-SUFFIX,configuration.apple.com
 DOMAIN-SUFFIX,setup.icloud.com
-
-# TestFlight & 开发者测试
-DOMAIN-SUFFIX,testflight.apple.com
-DOMAIN-SUFFIX,crashlytics.com   # 兼容部分 TestFlight 依赖
