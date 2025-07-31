@@ -1,4 +1,4 @@
-// 更新 2025.7.29
+// 更新 2025.7.31
 
 (async () => {
   const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
@@ -33,19 +33,12 @@
   const contents = [];
 
   for (const res of results) {
-    if (res.type === 1) {
-      if (res.info) {
-        contents.push(formatContent(res.info, title1 || "订阅1", expire1));
-      } else {
-        contents.push(`${title1 || "订阅1"}\n获取失败：${res.err}`);
-      }
-    }
-    if (res.type === 2) {
-      if (res.info) {
-        contents.push(formatContent(res.info, title2 || "订阅2", expire2));
-      } else {
-        contents.push(`${title2 || "订阅2"}\n获取失败：${res.err}`);
-      }
+    const title = res.type === 1 ? (title1 || "订阅1") : (title2 || "订阅2");
+    const expire = res.type === 1 ? expire1 : expire2;
+    if (res.info) {
+      contents.push(formatContent(res.info, title, expire));
+    } else {
+      contents.push(`机场名称：${title}\n获取失败：${res.err}`);
     }
   }
 
@@ -63,9 +56,10 @@ function formatContent(info, title, expire) {
   const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
   return [
-    title,
+    `机场名称：${title}`,
     `总计流量：${bytesToSize(total)}`,
     `剩余流量：${bytesToSize(remaining)}`,
+    `已用比例：${percentage}%`,
     (expire || info.expire)
       ? `到期时间：${formatDate(expire || info.expire)}`
       : `到期时间：无信息`,
@@ -77,7 +71,10 @@ function getDataInfo(url) {
     $httpClient.get(
       {
         url,
-        headers: { "User-Agent": "Shadowrocket", "Accept-Encoding": "gzip, deflate" },
+        headers: {
+          "User-Agent": "Shadowrocket",
+          "Accept-Encoding": "gzip, deflate",
+        },
       },
       (err, resp) => {
         if (err || resp.status !== 200) return reject("请求失败");
@@ -112,5 +109,7 @@ function formatDate(time) {
   let t = typeof time === "string" ? parseInt(time) : time;
   if (t < 1e12) t *= 1000;
   const d = new Date(t);
-  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  return isNaN(d)
+    ? "无效日期"
+    : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
