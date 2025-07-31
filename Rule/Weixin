@@ -1,0 +1,27 @@
+rule_set:
+  - tag: WeChat
+    type: domain-suffix
+    rules:
+      - weixin.qq.com
+      - wx.qq.com
+      - wxs.qq.com
+      - login.weixin.qq.com
+      - sticker.weixin.qq.com
+      - extshort.weixin.qq.com
+      - res.wx.qq.com
+      - servicewechat.com
+      - weixinbridge.com
+      - wechat.com
+      - wechatos.net
+      - wechatlegal.net
+      - wechatpay.com
+      - wechatpay.cn
+      - open.weixin.qq.com
+      - api.weixin.qq.com
+      - mp.weixin.qq.com
+      - wxapp.tc.qq.com
+      - iot‑tencent.com
+      - lbs.gtimg.com
+      - map.qq.com
+      - dldir1.qq.com
+      - btrace.qq.com
