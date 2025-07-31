@@ -9,7 +9,7 @@ compat_arguments:
 scriptings:
 - generic:
     name: 订阅处理
-    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/subinfo.js
     arguments:
       _compat.$argument: 'url1={{{订阅链接A}}}&title1={{{订阅名称A}}}&url2={{{订阅链接B}}}&title2={{{订阅名称B}}}'
     update_interval: 86400
