@@ -66,7 +66,6 @@ function formatContent(info, title, expire) {
     title,
     `总计流量：${bytesToSize(total)}`,
     `剩余流量：${bytesToSize(remaining)}`,
-    `使用进度：${percentage}%`,
     (expire || info.expire)
       ? `到期时间：${formatDate(expire || info.expire)}`
       : `到期时间：无信息`,
