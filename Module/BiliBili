@@ -1,5 +1,4 @@
 name: 哔哩哔哩
-description: 广告过滤UI简化
 
 body_rewrites:
 - response_jq:
