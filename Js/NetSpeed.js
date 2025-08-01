@@ -1,42 +1,63 @@
 // 2025.8.1
 
-const $ = new Env('network-speed');
+const $ = new Env('cloudflare-speed');
+
+const FILE_SIZES_MB = [1, 10, 50];
+const TEST_TIMES = 2;
 
 (async () => {
   try {
-    const mb = 1;
-    const bytes = mb * 1024 * 1024;
+    const totalStart = Date.now();
+    let allSpeeds = [];
 
-    let start = Date.now();
-    await $.http.get({ url: `https://speed.cloudflare.com/__down?bytes=${bytes}` });
-    const duration = (Date.now() - start) / 1000;
-    const speedMbps = round(mb / duration * 8, 2); // Mbps
+    for (let size of FILE_SIZES_MB) {
+      for (let i = 0; i < TEST_TIMES; i++) {
+        const { speed, duration } = await testDownload(size);
+        allSpeeds.push(speed);
+        $.log(`文件 ${size}MB 第${i+1}次: ${speed} Mbps, 耗时 ${duration} 秒`);
+      }
+    }
 
-    const pingStart = Date.now();
-    await $.http.get({ url: `http://cp.cloudflare.com/generate_204` });
-    const ping = Date.now() - pingStart;
+    const avgSpeed = round(avg(allSpeeds), 2);
+    const avgPing = round(await testPing(), 2);
+    const totalDuration = round((Date.now() - totalStart) / 1000, 2);
 
-    const title = `网络速率`;
-    const content = `速率: ${speedMbps} Mbps\n延迟: ${ping} ms\n测试耗时: ${round(duration, 2)} 秒`;
-    
     const result = {
-      title,
-      content,
+      content: `平均速率: ${avgSpeed} Mbps\n测试延迟: ${avgPing} ms\n本次耗时: ${totalDuration} 秒`,
       icon: "arrow.up.arrow.down",
       "icon-color": "3cb371"
     };
     $.log(result);
     $.done(result);
+
   } catch (e) {
-    const error = `${e.message || e}`;
-    $.log(`错误: ${error}`);
-    $.done({ title: '网络测速失败', content: error });
+    $.done({ content: e.message || e });
   }
 })();
 
-function round(number, precision = 0) {
+async function testDownload(mb) {
+  const bytes = mb * 1024 * 1024;
+  const url = `https://speed.cloudflare.com/__down?bytes=${bytes}`;
+  let start = Date.now();
+  await $.http.get({ url });
+  const duration = (Date.now() - start) / 1000;
+  const speed = round(mb / duration * 8, 2); // Mbps
+  return { speed, duration };
+}
+
+async function testPing() {
+  const pingStart = Date.now();
+  await $.http.get({ url: `http://cp.cloudflare.com/generate_204` });
+  return Date.now() - pingStart;
+}
+
+function avg(arr) {
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
+function round(num, precision = 0) {
   const factor = Math.pow(10, precision);
-  return Math.round(number * factor) / factor;
+  return Math.round(num * factor) / factor;
 }
 
 function Env(name) {
@@ -53,11 +74,5 @@ function Env(name) {
     }),
   };
   this.log = console.log;
-  this.done = (result) => {
-    if (typeof $done === 'function') {
-      $done(result);
-    } else {
-      process.exit(0);
-    }
-  };
+  this.done = (result) => { if (typeof $done === 'function') $done(result); };
 }
