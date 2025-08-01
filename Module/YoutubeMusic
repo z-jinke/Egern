@@ -1,7 +1,7 @@
 name: Youtube(Music)
 
 map_locals:
-- match: ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
+- match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
   status_code: 200
   body: ' '
 
