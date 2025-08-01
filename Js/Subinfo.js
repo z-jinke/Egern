@@ -44,7 +44,7 @@
 
   $done({
     content: contents.join("\n\n"),
-    icon: icon || "arrow.up.arrow.down",
+    icon: icon || "externaldrive",
     "icon-color": color || "#1E90FF",
   });
 })();
