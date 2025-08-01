@@ -12,8 +12,7 @@ scriptings:
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Subinfo.js
     arguments:
       _compat.$argument: 'url1={{{订阅链接A}}}&title1={{{订阅名称A}}}&url2={{{订阅链接B}}}&title2={{{订阅名称B}}}'
-    update_interval: 86400
-    timeout: 10
+    timeout: 5
 
 panels:
 - name: 订阅处理
