@@ -1,0 +1,9 @@
+name: 网络测速
+
+scriptings:
+- generic:
+    name: Speed
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/NetSpeed.js
+    
+panels:
+- name: Speed
