@@ -6,4 +6,4 @@ scriptings:
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/NetSpeed.js
     
 panels:
-- name: Speed
+- name: 测速
