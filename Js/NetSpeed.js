@@ -2,77 +2,56 @@
 
 const $ = new Env('cloudflare-speed');
 
-const FILE_SIZES_MB = [1, 10, 50];
-const TEST_TIMES = 2;
-
 (async () => {
   try {
-    const totalStart = Date.now();
-    let allSpeeds = [];
+    const maxMB = 10, maxBytes = maxMB * 1024 * 1024, timeoutMs = 3000;
+    const start = Date.now();
 
-    for (let size of FILE_SIZES_MB) {
-      for (let i = 0; i < TEST_TIMES; i++) {
-        const { speed, duration } = await testDownload(size);
-        allSpeeds.push(speed);
-        $.log(`文件 ${size}MB 第${i+1}次: ${speed} Mbps, 耗时 ${duration} 秒`);
-      }
-    }
+    const downloadPromise = $.http.get({
+      url: `https://speed.cloudflare.com/__down?bytes=${maxBytes}`,
+      timeout: timeoutMs + 1000
+    });
 
-    const avgSpeed = round(avg(allSpeeds), 2);
-    const avgPing = round(await testPing(), 2);
-    const totalDuration = round((Date.now() - totalStart) / 1000, 2);
+    const timeoutPromise = new Promise(res => setTimeout(() => res("timeout"), timeoutMs));
 
-    const result = {
-      content: `平均速率: ${avgSpeed} Mbps\n测试延迟: ${avgPing} ms\n本次耗时: ${totalDuration} 秒`,
+    const result = await Promise.race([downloadPromise, timeoutPromise]);
+    const duration = (Date.now() - start) / 1000;
+
+    const downloadedMB = result === "timeout" ? Math.min(maxMB, maxMB * (duration / (timeoutMs / 1000))) : maxMB;
+    const speedMbps = round((downloadedMB / duration) * 8, 2);
+
+    const pingStart = Date.now();
+    await $.http.get({ url: `http://1.1.1.1/generate_204`, timeout: 3000 });
+    const ping = Date.now() - pingStart;
+
+    $.done({
+      title: `网络速率`,
+      content: `速率: ${speedMbps} Mbps\n延迟: ${ping} ms\n耗时: ${round(duration, 2)} 秒`,
       icon: "arrow.up.arrow.down",
       "icon-color": "3cb371"
-    };
-    $.log(result);
-    $.done(result);
-
+    });
   } catch (e) {
-    $.done({ content: e.message || e });
+    $.done({ title: '网络测速失败', content: e.message || e });
   }
 })();
 
-async function testDownload(mb) {
-  const bytes = mb * 1024 * 1024;
-  const url = `https://speed.cloudflare.com/__down?bytes=${bytes}`;
-  let start = Date.now();
-  await $.http.get({ url });
-  const duration = (Date.now() - start) / 1000;
-  const speed = round(mb / duration * 8, 2); // Mbps
-  return { speed, duration };
-}
-
-async function testPing() {
-  const pingStart = Date.now();
-  await $.http.get({ url: `http://cp.cloudflare.com/generate_204` });
-  return Date.now() - pingStart;
-}
-
-function avg(arr) {
-  return arr.reduce((a, b) => a + b, 0) / arr.length;
-}
-
 function round(num, precision = 0) {
-  const factor = Math.pow(10, precision);
+  const factor = 10 ** precision;
   return Math.round(num * factor) / factor;
 }
 
 function Env(name) {
   this.name = name;
   this.http = {
-    get: (options) => new Promise((resolve, reject) => {
+    get: (opts) => new Promise((resolve, reject) => {
       if (typeof $httpClient !== "undefined") {
-        $httpClient.get(options, (err, resp, body) => err ? reject(err) : resolve(resp));
+        $httpClient.get(opts, (err, resp) => err ? reject(err) : resolve(resp));
       } else if (typeof $task !== "undefined") {
-        $task.fetch(options).then(resolve).catch(reject);
+        $task.fetch(opts).then(resolve).catch(reject);
       } else {
         reject(new Error('不支持的环境'));
       }
-    }),
+    })
   };
-  this.log = console.log;
   this.done = (result) => { if (typeof $done === 'function') $done(result); };
 }
