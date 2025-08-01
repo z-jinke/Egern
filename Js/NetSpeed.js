@@ -1,75 +1,68 @@
 // 2025.8.1
 
-const $ = new Env('network-speed');
-
 (async () => {
   try {
-    const mb = 5; 
+    const mb = 1;
     const bytes = mb * 1024 * 1024;
+    const timeLimit = 5000;
+    const startTotal = Date.now();
+    let peakSpeed = 0;
+    let minPing = Infinity;
+    let rounds = 0;
 
-    let start = Date.now();
-    await $.http.get({ url: `https://speed.cloudflare.com/__down?bytes=${bytes}` });
-    const duration = (Date.now() - start) / 1000;
-    const speedMbps = round(mb / duration * 8, 2); // Mbps
+    while ((Date.now() - startTotal) < timeLimit) {
+      rounds++;
 
-    const pingStart = Date.now();
-    await $.http.get({ url: `http://cp.cloudflare.com/generate_204` });
-    const ping = Date.now() - pingStart;
+      const start = Date.now();
+      try {
+        await httpGet({ url: `https://speed.cloudflare.com/__down?bytes=${bytes}` }, timeLimit - (Date.now() - startTotal));
+        const duration = (Date.now() - start) / 1000;
+        const speed = round(mb / duration * 8, 2);
+        if (speed > peakSpeed) peakSpeed = speed;
+      } catch (err) {
+        break;
+      }
 
-    const title = `网络速率`;
-    const content = `速率: ${speedMbps} Mbps\n延迟: ${ping} ms\n耗时: ${round(duration, 2)} 秒`;
-    
+      const pingStart = Date.now();
+      try {
+        await httpGet({ url: `http://1.1.1.1/generate_204` }, timeLimit - (Date.now() - startTotal));
+        const ping = Date.now() - pingStart;
+        if (ping < minPing) minPing = ping;
+      } catch (err) {
+        break;
+      }
+    }
+
+    const totalDuration = (Date.now() - startTotal) / 1000;
+
     const result = {
-      title,
-      content,
+      title: "网络速率",
+      content: `峰值速率: ${peakSpeed || '无数据'} Mbps\n最低延迟: ${minPing === Infinity ? '无数据' : minPing + ' ms'}\n总共耗时: ${round(totalDuration, 2)} 秒\n测试次数: ${rounds}`,
       icon: "arrow.up.arrow.down",
       "icon-color": "3cb371"
     };
-    $.log(result);
-    $.done(result);
+
+    console.log(result);
+    $done(result);
+
   } catch (e) {
-    const error = `${e.message || e}`;
-    $.log(`错误: ${error}`);
-    $.done({ title: '网络测速失败', content: error });
+    const error = e.message || e;
+    console.log(`错误: ${error}`);
+    $done({ title: '网络测速失败', content: error });
   }
 })();
+
+function httpGet(options, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('请求超时')), timeoutMs);
+    $httpClient.get(options, (err, resp, body) => {
+      clearTimeout(timeout);
+      err ? reject(err) : resolve(resp);
+    });
+  });
+}
 
 function round(number, precision = 0) {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
-}
-
-function Env(name) {
-  this.name = name;
-  this.http = {
-    get: (options) => new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('请求超时 (5秒)')), 5000);
-      if (typeof $httpClient !== "undefined") {
-        $httpClient.get(options, (err, resp, body) => {
-          clearTimeout(timeout);
-          err ? reject(err) : resolve(resp);
-        });
-      } else if (typeof $task !== "undefined") {
-        $task.fetch(options).then((resp) => {
-          clearTimeout(timeout);
-          resolve(resp);
-        }).catch((err) => {
-          clearTimeout(timeout);
-          reject(err);
-        });
-      } else {
-        clearTimeout(timeout);
-        reject(new Error('不支持的环境'));
-      }
-    }),
-  };
-  this.log = console.log;
-  this.done = (result) => {
-    if (typeof $done === 'function') {
-      $done(result);
-    } else {
-      console.log(result);
-      process.exit(0);
-    }
-  };
 }
