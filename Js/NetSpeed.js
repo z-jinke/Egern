@@ -4,7 +4,7 @@ const $ = new Env('cloudflare-speed');
 
 (async () => {
   try {
-    const maxMB = 10, maxBytes = maxMB * 1024 * 1024, timeoutMs = 3000;
+    const maxMB = 10, maxBytes = maxMB * 1024 * 1024, timeoutMs = 5000;
     const start = Date.now();
 
     const downloadPromise = $.http.get({
@@ -21,7 +21,7 @@ const $ = new Env('cloudflare-speed');
     const speedMbps = round((downloadedMB / duration) * 8, 2);
 
     const pingStart = Date.now();
-    await $.http.get({ url: `http://1.1.1.1/generate_204`, timeout: 3000 });
+    await $.http.get({ url: `http://cp.cloudflare.com/generate_204`, timeout: 5000 });
     const ping = Date.now() - pingStart;
 
     $.done({
