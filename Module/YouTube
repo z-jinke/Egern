@@ -1,4 +1,4 @@
-name: Youtube
+name: YouTube
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.*(oad|adformat|ctier=A)
