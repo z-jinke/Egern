@@ -5,13 +5,15 @@ compat_arguments:
   订阅名称A: ''
   订阅链接B: ''
   订阅名称B: ''
+
 scriptings:
 - generic:
     name: 信息面板
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/SubMonitor.js
     arguments:
-      _compat.$argument: url1={{订阅链接A}}&title1={{订阅名称A}}&url2={{订阅链接B}}&title2={{订阅名称B}}
-    timeout: 5
+      _compat.$argument:
+        url1={{{订阅链接A}}}&title1={{{订阅名称A}}}&url2={{{订阅链接B}}}&title2={{{订阅名称B}}}
+    timeout: 10
 panels:
 - name: 信息面板
   title: 订阅信息
