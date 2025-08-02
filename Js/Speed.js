@@ -1,3 +1,5 @@
+// 2025.8.2
+
 const $ = new Env();
 
 (async () => {
@@ -37,7 +39,7 @@ const $ = new Env();
       const pingStart = Date.now();
       try {
         await Promise.race([
-          $.http.get({ url: 'http://cp.cloudflare.com/generate_204', method: 'HEAD', timeout: timeoutMs }),
+          $.http.get({ url: 'http://www.gstatic.com/generate_204', method: 'HEAD', timeout: timeoutMs }),
           new Promise((_, reject) => setTimeout(() => reject(new Error("Ping超时(>8秒)")), timeoutMs))
         ]);
         pingResults.push(Date.now() - pingStart);
