@@ -44,7 +44,7 @@
 
   $done({
     content: contents.join("\n\n"),
-    icon: icon || "externaldrive",
+    icon: icon || "cloud.fill",
     "icon-color": color || "#1E90FF",
   });
 })();
