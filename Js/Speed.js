@@ -50,7 +50,7 @@ const $ = new Env();
     const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒`;
     const iconColor = speedMbps < 50 ? '#FF4D4D' : '#66E384';
 
-    $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down', 'icon-color': iconColor });
+    $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down.circle.fill', 'icon-color': iconColor });
 
   } catch (e) {
     $.done({ title: '测速失败', content: e.message || e.toString() });
