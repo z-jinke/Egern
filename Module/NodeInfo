@@ -1,0 +1,13 @@
+name: 节点信息
+
+scriptings:
+- generic:
+    name: 节点面板
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/NodeInfo.js
+panels:
+- name: 节点面板
+
+
+
+
+
