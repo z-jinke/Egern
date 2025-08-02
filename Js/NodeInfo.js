@@ -34,7 +34,7 @@ $httpClient.get(url, (error, response, data) => {
             title: "节点信息",
             content: "解析失败",
             icon: "exclamationmark.triangle",
-            "icon-color": "#FF9500"
+            "icon-color": "#00BFFF"
         });
     }
 
