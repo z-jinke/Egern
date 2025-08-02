@@ -1,4 +1,4 @@
-// 更新 2025.7.31
+// 2025.8.2
 
 (async () => {
   const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
