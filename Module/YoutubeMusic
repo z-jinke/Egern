@@ -3,7 +3,7 @@ name: Youtube(Music)
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.*(oad|adformat|ctier=A)
   status_code: 200
-  body: '{}'
+  body: ' '
 
 scriptings:
 - http_response:
