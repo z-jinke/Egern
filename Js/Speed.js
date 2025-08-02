@@ -1,4 +1,4 @@
-// 2025.8.2
+// 2025.8.3
 
 const $ = new Env();
 
@@ -11,7 +11,6 @@ const $ = new Env();
     const testUrl = `https://speed.cloudflare.com/__down?bytes=${singleSizeMB * 1024 * 1024}`;
 
     let totalBytes = 0;
-    let finishedCount = 0;
     const startTime = Date.now();
 
     const worker = async () => {
@@ -19,7 +18,6 @@ const $ = new Env();
         try {
           await $.http.get({ url: testUrl, timeout: timeoutMs });
           totalBytes += singleSizeMB * 1024 * 1024;
-          finishedCount++;
         } catch {}
       }
     };
@@ -49,7 +47,7 @@ const $ = new Env();
     const pingDuration = Math.min(...pingResults);
 
     const title = '网络测速';
-    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒\n累计: ${concurrency} 次测试`;
+    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒`;
     const iconColor = speedMbps < 50 ? '#FF4D4D' : '#66E384';
 
     $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down', 'icon-color': iconColor });
