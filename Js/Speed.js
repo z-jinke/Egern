@@ -7,7 +7,7 @@ const $ = new Env();
     const singleSizeMB = 1;
     const concurrency = 5;
     const testDuration = 5000;
-    const timeoutMs = 8000;
+    const timeoutMs = 5000;
     const testUrl = `https://speed.cloudflare.com/__down?bytes=${singleSizeMB * 1024 * 1024}`;
 
     let totalBytes = 0;
@@ -49,7 +49,7 @@ const $ = new Env();
     const pingDuration = Math.min(...pingResults);
 
     const title = '网络测速';
-    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒\n完成: ${finishedCount} 个请求`;
+    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒\n累计: ${concurrency} 次测试`;
     const iconColor = speedMbps < 50 ? '#FF4D4D' : '#66E384';
 
     $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down', 'icon-color': iconColor });
