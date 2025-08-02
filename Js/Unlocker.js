@@ -5,7 +5,7 @@ const $ = new Env();
 (async () => {
   let title = "解锁检测";
   let icon = "lock.circle.fill";        
-  let iconColor = "#00FA9A";   
+  let iconColor = "#FF7F50";   
 
   let contentGPT = "";
   let contentNetflix = "";
