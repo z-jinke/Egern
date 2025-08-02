@@ -10,7 +10,7 @@ scriptings:
     name: 订阅处理
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/SubMonitor.js
     arguments:
-      _compat.$argument: url1=https://132.232.133.234/link/777f7089e93b3de4edffbb6c14399065?config=all&title1=Aladdin&url2=&title2=
+      _compat.$argument: url1=&title1=&url2=&title2=
     timeout: 5
 panels:
 - name: 订阅处理
