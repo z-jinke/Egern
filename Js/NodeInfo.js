@@ -1,4 +1,4 @@
-// 2025.8.2
+// 2025.8.3
 
 const url = "http://api.ip2location.io/";
 
@@ -16,13 +16,14 @@ const countryMap = {
     "KR": "韩国"
 };
 
+const fixedIcon = "location.circle.fill";
+const fixedIconColor = "#48D1CC";
+
 $httpClient.get(url, (error, response, data) => {
     if (error) {
         return $done({
             title: "节点信息",
-            content: "请求错误",
-            icon: "exclamationmark.triangle",
-            "icon-color": "#FF9500"
+            content: "请求错误"
         });
     }
 
@@ -32,9 +33,7 @@ $httpClient.get(url, (error, response, data) => {
     } catch {
         return $done({
             title: "节点信息",
-            content: "解析失败",
-            icon: "exclamationmark.triangle",
-            "icon-color": "#00BFFF"
+            content: "解析失败"
         });
     }
 
@@ -44,11 +43,10 @@ $httpClient.get(url, (error, response, data) => {
     const countryCN = countryMap[countryCode.toUpperCase()] || "其他地区";
     const flagEmoji = countryCodeToFlagEmoji(countryCode);
 
-    const body = {
+    return $done({
         title: "节点信息",
         content: `IP所在地：${ip}\n运营服务：${asName}\n节点落地：${flagEmoji} ${countryCN}`,
-        icon: "globe",
-        "icon-color": "#48D1CC"
-    };
-    $done(body);
+        icon: fixedIcon,
+        "icon-color": fixedIconColor
+    });
 });
