@@ -1,50 +1,61 @@
-// 2025.8.2
-
 const $ = new Env();
 
 (async () => {
   try {
-    const singleSizeMB = 5, concurrency = 4;
+    const singleSizeMB = 1;
+    const concurrency = 5;
+    const testDuration = 5000;
+    const timeoutMs = 8000;
     const testUrl = `https://speed.cloudflare.com/__down?bytes=${singleSizeMB * 1024 * 1024}`;
-    const timeoutMs = 5000;
+
     let totalBytes = 0;
     let finishedCount = 0;
-    const timeoutPromise = new Promise(resolve => setTimeout(resolve, timeoutMs));
     const startTime = Date.now();
-    const tasks = Array(concurrency).fill(0).map(() =>
-      new Promise(async (resolve) => {
+
+    const worker = async () => {
+      while (Date.now() - startTime < testDuration) {
         try {
           await $.http.get({ url: testUrl, timeout: timeoutMs });
           totalBytes += singleSizeMB * 1024 * 1024;
           finishedCount++;
-          resolve(true);
-        } catch {
-          resolve(false);
-        }
-      })
-    );
+        } catch {}
+      }
+    };
+
+    const tasks = Array(concurrency).fill(0).map(() => worker());
     await Promise.race([
-      Promise.all(tasks),
-      timeoutPromise
+      Promise.allSettled(tasks),
+      new Promise(resolve => setTimeout(resolve, testDuration))
     ]);
-    const durationSec = Math.max((Date.now() - startTime) / 1000, 0.001);
-    if (totalBytes === 0) throw new Error('所有请求均超时或失败');
+
+    const durationSec = (Date.now() - startTime) / 1000;
+    if (totalBytes === 0) throw new Error('测速期间无成功下载');
     const speedMbps = (totalBytes * 8) / (durationSec * 1024 * 1024);
-    const pingStart = Date.now();
-    await Promise.race([
-      $.http.get({ url: 'http://cp.cloudflare.com/generate_204', method: 'HEAD', timeout: timeoutMs }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Ping超时(>5秒)")), timeoutMs))
-    ]);
-    const pingDuration = Date.now() - pingStart;
+
+    let pingResults = [];
+    for (let i = 0; i < 2; i++) {
+      const pingStart = Date.now();
+      try {
+        await Promise.race([
+          $.http.get({ url: 'http://cp.cloudflare.com/generate_204', method: 'HEAD', timeout: timeoutMs }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Ping超时(>8秒)")), timeoutMs))
+        ]);
+        pingResults.push(Date.now() - pingStart);
+      } catch {}
+    }
+    if (pingResults.length === 0) throw new Error('Ping全部失败');
+    const pingDuration = Math.min(...pingResults);
+
     const title = '网络测速';
-    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n耗时: ${durationSec.toFixed(2)} 秒`;
+    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒\n完成: ${finishedCount} 个请求`;
     const iconColor = speedMbps < 50 ? '#FF4D4D' : '#66E384';
+
     $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down', 'icon-color': iconColor });
+
   } catch (e) {
     $.done({ title: '测速失败', content: e.message || e.toString() });
   }
 })();
-
 
 function Env() {
   class Http {
