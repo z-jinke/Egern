@@ -54,7 +54,7 @@ function formatContent(info, title, expire) {
 
   return [
     `机场：${title}`,
-    `总计：${bytesToSize(total)}>${bytesToSize(remaining)}`,
+    `流量：${bytesToSize(total)}=${bytesToSize(remaining)}`,
     (expire || info.expire)
       ? `到期：${formatDate(expire || info.expire)}`
       : `到期：无信息`,
