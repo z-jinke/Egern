@@ -8,8 +8,6 @@
     return $done({
       title: "提示",
       content: "未填写任何订阅链接",
-      icon: "info.circle",
-      "icon-color": "#808080",
     });
   }
 
@@ -45,7 +43,7 @@
   $done({
     content: contents.join("\n\n"),
     icon: icon || "cloud.fill",
-    "icon-color": color || "#ffb6c1",
+    "icon-color": color || "#b0c4de",
   });
 })();
 
