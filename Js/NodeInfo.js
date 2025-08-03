@@ -17,7 +17,7 @@ const countryMap = {
 };
 
 const fixedIcon = "location.circle.fill";
-const fixedIconColor = "#48D1CC";
+const fixedIconColor = "#1e90ff";
 
 $httpClient.get(url, (error, response, data) => {
     if (error) {
