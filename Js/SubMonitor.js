@@ -4,107 +4,66 @@
   const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
     Object.fromEntries(new URLSearchParams($argument));
 
-  if ((!url1 || url1.trim() === "") && (!url2 || url2.trim() === "")) {
-    return $done({
-      title: "提示",
-      content: "未填写任何订阅链接",
-    });
+  if (!url1 && !url2) {
+    return $done({ title: "提示", content: "未填写任何订阅链接" });
   }
 
   const tasks = [];
-  if (url1 && url1.trim() !== "") {
-    tasks.push(
-      getDataInfo(url1)
-        .then((info) => ({ type: 1, info }))
-        .catch((err) => ({ type: 1, err }))
-    );
-  }
-  if (url2 && url2.trim() !== "") {
-    tasks.push(
-      getDataInfo(url2)
-        .then((info) => ({ type: 2, info }))
-        .catch((err) => ({ type: 2, err }))
-    );
-  }
+  if (url1) tasks.push(getData(url1, title1 || "订阅1", expire1));
+  if (url2) tasks.push(getData(url2, title2 || "订阅2", expire2));
 
-  const results = await Promise.all(tasks);
-  const contents = [];
-
-  for (const res of results) {
-    const title = res.type === 1 ? (title1 || "订阅1") : (title2 || "订阅2");
-    const expire = res.type === 1 ? expire1 : expire2;
-    if (res.info) {
-      contents.push(formatContent(res.info, title, expire));
-    } else {
-      contents.push(`机场：${title}\n获取失败：${res.err}`);
-    }
-  }
-
+  const results = await Promise.all(tasks.map((p) => p.catch((e) => e)));
   $done({
-    content: contents.join("\n\n"),
+    content: results.join("\n\n"),
     icon: icon || "cloud.fill",
-    "icon-color": color || "#FF7F50",
+    "icon-color": color || "#28CDBB",
   });
 })();
 
-function formatContent(info, title, expire) {
-  const used = (info.download || 0) + (info.upload || 0);
-  const total = info.total || 0;
-  const remaining = Math.max(total - used, 0);
-
-  return [
-    `机场：${title}`,
-    `流量：${bytesToSize(total)}｜${bytesToSize(remaining)}`,
-    (expire || info.expire)
-      ? `到期：${formatDate(expire || info.expire)}`
-      : `到期：无信息`,
-  ].join("\n");
-}
-
-function getDataInfo(url) {
+function getData(url, title, expire) {
   return new Promise((resolve, reject) => {
     $httpClient.get(
-      {
-        url,
-        headers: {
-          "User-Agent": "Shadowrocket",
-          "Accept-Encoding": "gzip, deflate",
-        },
-      },
+      { url, headers: { "User-Agent": "Shadowrocket" } },
       (err, resp) => {
-        if (err || resp.status !== 200) return reject("请求失败");
+        if (err || resp.status !== 200) {
+          return resolve(`机场：${title}\n获取失败`);
+        }
 
-        const headers = Object.fromEntries(
-          Object.entries(resp.headers).map(([k, v]) => [k.toLowerCase(), v])
-        );
-
-        const infoStr = headers["subscription-userinfo"];
-        if (!infoStr) return reject("未找到订阅信息");
+        const infoStr = (resp.headers["subscription-userinfo"] || "").toString();
+        if (!infoStr) {
+          return resolve(`机场：${title}\n未找到订阅信息`);
+        }
 
         const info = {};
-        infoStr.split(";").forEach((pair) => {
-          const [k, v] = pair.split("=").map((s) => s.trim());
-          if (k && v) info[k] = Number(v);
+        infoStr.split(";").forEach((p) => {
+          const [k, v] = p.split("=");
+          if (k && v) info[k.trim()] = Number(v.trim());
         });
 
-        resolve(info);
+        const used = (info.download || 0) + (info.upload || 0);
+        const total = info.total || 0;
+        const remain = Math.max(total - used, 0);
+
+        resolve(
+          `机场：${title}\n流量：${bytesToSize(total)}｜${bytesToSize(remain)}\n到期：${
+            expire ? formatDate(expire) : info.expire ? formatDate(info.expire) : "无信息"
+          }`
+        );
       }
     );
   });
 }
 
-function bytesToSize(bytes) {
-  if (!bytes) return "0B";
-  const units = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
+function bytesToSize(b) {
+  if (!b) return "0B";
+  const u = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(b) / Math.log(1024));
+  return (b / 1024 ** i).toFixed(2) + " " + u[i];
 }
 
-function formatDate(time) {
-  let t = typeof time === "string" ? parseInt(time) : time;
-  if (t < 1e12) t *= 1000;
-  const d = new Date(t);
-  return isNaN(d)
-    ? "无效日期"
-    : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+function formatDate(t) {
+  let time = Number(t);
+  if (time < 1e12) time *= 1000;
+  const d = new Date(time);
+  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
