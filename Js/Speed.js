@@ -2,7 +2,7 @@
 
 const sizeMB = 10;
 const timeout = 5000;
-const downloadUrl = `https://speed.cloudflare.com/__down?bytes=${sizeMB * 1024 * 1024}`;
+const downloadUrl = 'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4';
 const pingUrl = 'http://www.gstatic.com/generate_204';
 
 function httpGet(url, method = 'GET', simulateError = null) {
@@ -15,8 +15,17 @@ function httpGet(url, method = 'GET', simulateError = null) {
       reject('请求失败');
       return;
     }
+
+    const options = {
+      url,
+      method,
+      headers: {
+        Range: `bytes=0-${sizeMB * 1024 * 1024 - 1}`
+      }
+    };
+
     const timer = setTimeout(() => reject('请求超时'), timeout);
-    $httpClient.get({ url, method }, (err, resp, data) => {
+    $httpClient.get(options, (err, resp, data) => {
       clearTimeout(timer);
       if (err) reject(err);
       else resolve(data);
@@ -27,13 +36,9 @@ function httpGet(url, method = 'GET', simulateError = null) {
 (async () => {
   let speedResult, pingResult, durationResult;
 
-  // 你这里修改为 'timeout', 'fail' 或 null 来模拟不同情况
-  let downloadError = null;
-  let pingError = null;
-
   try {
     const start = Date.now();
-    await httpGet(downloadUrl, 'GET', downloadError);
+    await httpGet(downloadUrl, 'GET');
     const duration = (Date.now() - start) / 1000;
     const speed = (sizeMB * 8) / duration;
     speedResult = `速度: ${speed.toFixed(2)} Mbps`;
@@ -44,8 +49,9 @@ function httpGet(url, method = 'GET', simulateError = null) {
   }
 
   try {
-    await httpGet(pingUrl, 'HEAD', pingError);
-    const ping = 50;
+    const pingStart = Date.now();
+    await httpGet(pingUrl, 'HEAD');
+    const ping = Date.now() - pingStart;
     pingResult = `延迟: ${ping} ms`;
   } catch (e) {
     pingResult = `延迟: 测试失败 (${e.message || e})`;
