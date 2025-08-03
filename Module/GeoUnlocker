@@ -1,8 +1,0 @@
-name: 解锁检测
-
-scriptings:
-- generic:
-    name: 检测面板
-    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Unlocker.js
-panels:
-- name: 检测面板
