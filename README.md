@@ -7,11 +7,14 @@
 ### [哔哩哔哩](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/BiliBili)
 - 拦截广告精简UI界面
 
-### [订阅信息](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/SubInfoMonitor)
+### [订阅信息](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/SubInfo)
 - 查看订阅流量信息
 
 ### [节点信息](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
 - 查看节点的IP与位置信息
+
+### [节点测速](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
+- 测试节点速度与延迟
 
 ---
 
