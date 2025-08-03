@@ -11,6 +11,7 @@ const $ = new Env();
     const testUrl = `https://speed.cloudflare.com/__down?bytes=${singleSizeMB * 1024 * 1024}`;
 
     let totalBytes = 0;
+    let requestCount = 0; 
     const startTime = Date.now();
 
     const worker = async () => {
@@ -18,6 +19,7 @@ const $ = new Env();
         try {
           await $.http.get({ url: testUrl, timeout: timeoutMs });
           totalBytes += singleSizeMB * 1024 * 1024;
+          requestCount++; 
         } catch {}
       }
     };
@@ -28,8 +30,8 @@ const $ = new Env();
       new Promise(resolve => setTimeout(resolve, testDuration))
     ]);
 
-    const durationSec = (Date.now() - startTime) / 1000;
     if (totalBytes === 0) throw new Error('测速期间无成功下载');
+    const durationSec = (Date.now() - startTime) / 1000;
     const speedMbps = (totalBytes * 8) / (durationSec * 1024 * 1024);
 
     let pingResults = [];
@@ -47,10 +49,10 @@ const $ = new Env();
     const pingDuration = Math.min(...pingResults);
 
     const title = '网络测速';
-    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n时长: ${durationSec.toFixed(2)} 秒`;
+    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${pingDuration} ms\n请求: ${requestCount}个完成`;
     const iconColor = speedMbps < 50 ? '#FF4D4D' : '#66E384';
 
-    $.done({ title, content, speedMbps, pingDuration, durationSec, icon: 'arrow.up.arrow.down.circle.fill', 'icon-color': iconColor });
+    $.done({ title, content, speedMbps, pingDuration, requestCount, icon: 'arrow.up.arrow.down.circle.fill', 'icon-color': iconColor });
 
   } catch (e) {
     $.done({ title: '测速失败', content: e.message || e.toString() });
