@@ -38,7 +38,7 @@ const $ = new Env();
       title: '网络测速',
       content,
       icon: 'arrow.up.arrow.down.circle.fill',
-      'icon-color': speedMbps < 50 ? '#FF4D4D' : '#66E384'
+      'icon-color': speedMbps < 50 ? '#FF0000' : '#66E384'
     });
 
   } catch (e) {
