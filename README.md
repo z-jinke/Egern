@@ -13,9 +13,6 @@
 ### [节点信息](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
 - 查看节点的IP与位置信息
 
-### [网络测速](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/Networkspeed)
-- 快速测试网络延迟与速度
-
 ---
 
 ### 特别鸣谢
