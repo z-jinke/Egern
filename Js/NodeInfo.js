@@ -45,7 +45,7 @@ $httpClient.get(url, (error, response, data) => {
 
     return $done({
         title: "节点信息",
-        content: `IP所在地：${ip}\n运营服务：${asName}\n节点落地：${flagEmoji} ${countryCN}`,
+        content: `IP所在地：${ip}\n运营服务：${asName}\n所属地区：${flagEmoji} ${countryCN}`,
         icon: fixedIcon,
         "icon-color": fixedIconColor
     });
