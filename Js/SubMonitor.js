@@ -43,7 +43,7 @@
   $done({
     content: contents.join("\n\n"),
     icon: icon || "cloud.fill",
-    "icon-color": color || "#66cdaa",
+    "icon-color": color || "#FF7F50",
   });
 })();
 
