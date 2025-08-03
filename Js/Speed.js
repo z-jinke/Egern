@@ -1,81 +1,62 @@
 // 2025.8.3
 
-const $ = new Env();
+const sizeMB = 10;
+const timeout = 5000;
+const downloadUrl = `https://speed.cloudflare.com/__down?bytes=${sizeMB * 1024 * 1024}`;
+const pingUrl = 'http://www.gstatic.com/generate_204';
+
+function httpGet(url, method = 'GET', simulateError = null) {
+  return new Promise((resolve, reject) => {
+    if (simulateError === 'timeout') {
+      setTimeout(() => reject('请求超时'), timeout);
+      return;
+    }
+    if (simulateError === 'fail') {
+      reject('请求失败');
+      return;
+    }
+    const timer = setTimeout(() => reject('请求超时'), timeout);
+    $httpClient.get({ url, method }, (err, resp, data) => {
+      clearTimeout(timer);
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+}
 
 (async () => {
+  let speedResult, pingResult, durationResult;
+
+  // 你这里修改为 'timeout', 'fail' 或 null 来模拟不同情况
+  let downloadError = null;
+  let pingError = null;
+
   try {
-    const sizeMB = 25;
-    const timeout = 10000;
-    const url = `https://speed.cloudflare.com/__down?bytes=${sizeMB * 1024 * 1024}`;
-    const warmupUrl = `https://speed.cloudflare.com/__down?bytes=1024`;
-    
-    for (let i = 0; i < 1; i++) {
-      try {
-        await $.http.get({ url: warmupUrl, timeout: 3000 });
-      } catch {}
-    }
-
     const start = Date.now();
-    await $.http.get({ url, timeout });
-    const durationSec = (Date.now() - start) / 1000;
-
-    const speedMbps = (sizeMB * 8) / durationSec;
-
-    let pings = [];
-    for (let i = 0; i < 2; i++) {
-      const pingStart = Date.now();
-      try {
-        await $.http.get({ url: 'http://www.gstatic.com/generate_204', method: 'HEAD', timeout });
-        pings.push(Date.now() - pingStart);
-      } catch {}
-    }
-    if (pings.length === 0) throw new Error("Ping全部失败");
-    const bestPing = Math.min(...pings);
-
-    const content = `速度: ${speedMbps.toFixed(2)} Mbps\n延迟: ${bestPing} ms\n耗时: ${durationSec.toFixed(1)}秒钟完成`;
-
-    $.done({
-      title: '网络测速',
-      content,
-      icon: 'arrow.up.arrow.down.circle.fill',
-      'icon-color': speedMbps < 50 ? '#FF0000' : '#66E384'
-    });
-
+    await httpGet(downloadUrl, 'GET', downloadError);
+    const duration = (Date.now() - start) / 1000;
+    const speed = (sizeMB * 8) / duration;
+    speedResult = `速度: ${speed.toFixed(2)} Mbps`;
+    durationResult = `耗时: ${duration.toFixed(1)} 秒`;
   } catch (e) {
-    $.done({ title: '测速失败', content: e.message });
+    speedResult = `速度: 测试失败 (${e.message || e})`;
+    durationResult = `耗时: -`;
   }
-})();
 
-function Env() {
-  class Http {
-    constructor(env) { this.env = env }
-    get(opt) {
-      if (typeof opt === "string") opt = { url: opt };
-      return new Promise((res, rej) => {
-        const timer = setTimeout(() => rej("请求超时"), opt.timeout || 6000);
-        if (this.env.isSurge() || this.env.isStash()) {
-          this.env.$httpClient.get(opt, (err, resp) => {
-            clearTimeout(timer);
-            err ? rej(err) : res({ status: resp.status });
-          });
-        } else {
-          clearTimeout(timer);
-          rej("不支持的环境");
-        }
-      });
-    }
+  try {
+    await httpGet(pingUrl, 'HEAD', pingError);
+    const ping = 50;
+    pingResult = `延迟: ${ping} ms`;
+  } catch (e) {
+    pingResult = `延迟: 测试失败 (${e.message || e})`;
   }
-  return new class {
-    constructor() {
-      this.http = new Http(this);
-      this.$httpClient = typeof $httpClient !== "undefined" ? $httpClient : null;
-    }
-    isSurge() { return typeof $httpClient !== "undefined" && typeof $loon === "undefined" }
-    isLoon() { return typeof $loon !== "undefined" }
-    isStash() { return typeof $environment !== "undefined" && $environment["stash-version"] }
-    done(result = {}) {
-      if (this.isSurge() || this.isLoon() || this.isStash()) $done(result);
-      else process.exit(0);
-    }
-  }
-}
+
+  $done({
+    title: '网络测速',
+    content: `${speedResult}\n${pingResult}\n${durationResult}`,
+    icon: 'arrow.up.arrow.down.circle.fill',
+    'icon-color': (speedResult.includes('失败') || pingResult.includes('失败'))
+      ? '#FF0000'
+      : (speedResult.match(/\d+(\.\d+)?/) && parseFloat(speedResult.match(/\d+(\.\d+)?/)[0]) < 50 ? '#FFA500' : '#1BF16E')
+  });
+})();
