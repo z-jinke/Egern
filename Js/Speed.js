@@ -1,8 +1,10 @@
+// 2025.8.3
+
 const $ = new Env();
 
 (async () => {
   try {
-    const sizeMB = 30;
+    const sizeMB = 25;
     const timeout = 10000;
     const url = `https://speed.cloudflare.com/__down?bytes=${sizeMB * 1024 * 1024}`;
     const warmupUrl = `https://speed.cloudflare.com/__down?bytes=1024`;
@@ -20,7 +22,7 @@ const $ = new Env();
     const speedMbps = (sizeMB * 8) / durationSec;
 
     let pings = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       const pingStart = Date.now();
       try {
         await $.http.get({ url: 'http://www.gstatic.com/generate_204', method: 'HEAD', timeout });
