@@ -1,4 +1,4 @@
-// 2025.8.2
+// 2025.8.3
 
 (async () => {
   const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
@@ -38,7 +38,7 @@
     if (res.info) {
       contents.push(formatContent(res.info, title, expire));
     } else {
-      contents.push(`机场名称：${title}\n获取失败：${res.err}`);
+      contents.push(`机场：${title}\n获取失败：${res.err}`);
     }
   }
 
@@ -53,15 +53,13 @@ function formatContent(info, title, expire) {
   const used = (info.download || 0) + (info.upload || 0);
   const total = info.total || 0;
   const remaining = Math.max(total - used, 0);
-  const percentage = total ? ((used / total) * 100).toFixed(1) : "0";
 
   return [
-    `机场名称：${title}`,
-    `剩余流量：${bytesToSize(remaining)}`,
-    `总计流量：${bytesToSize(total)}`,
+    `机场：${title}`,
+    `总计：${bytesToSize(total)}/剩余：${bytesToSize(remaining)}`,
     (expire || info.expire)
-      ? `到期时间：${formatDate(expire || info.expire)}`
-      : `到期时间：无信息`,
+      ? `到期：${formatDate(expire || info.expire)}`
+      : `到期：无信息`,
   ].join("\n");
 }
 
