@@ -1,4 +1,4 @@
-name: 模块转换
+name: 脚本转换
 
 scriptings:
 - http_request:
