@@ -13,7 +13,7 @@
 ### [节点信息](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
 - 查看节点的IP与位置信息
 
-### [节点测速](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
+### [网络测速](https://github.com/z-jinke/Egern/raw/refs/heads/main/Module/NodeInfo)
 - 测试节点速度与延迟
 
 ---
