@@ -14,6 +14,7 @@ let fixedIcon = "location.north.circle.fill";
 let successColor = "#1EA2FF";
 let failColor = "#FF3B30";
 let start = Date.now();
+
 $httpClient.get(testUrl, function(err, resp, body) {
     let delay = "超时";
     if (!err && resp && resp.status === 204) {
@@ -32,9 +33,9 @@ $httpClient.get(testUrl, function(err, resp, body) {
                 let jsonData = JSON.parse(data);
                 if (jsonData.ip) ip = jsonData.ip;
                 if (jsonData.org) {
-                    service = delay + "｜" + jsonData.org.replace(/^AS\d+\s+/, "");
+                    service = jsonData.org.replace(/^AS\d+\s+/, "");
                 } else {
-                    service = delay + "｜未知运营商";
+                    service = "未知运营商";
                 }
                 if (jsonData.country && jsonData.country.length === 2) {
                     let countryCode = jsonData.country.toUpperCase();
@@ -55,6 +56,7 @@ $httpClient.get(testUrl, function(err, resp, body) {
             title: "节点信息",
             content: "查询：" + ip + 
                      "\n运营：" + service + 
+                     "\n延迟：" + delay +
                      "\n国家：" + countryCN + flagEmoji,
             icon: fixedIcon,
             "icon-color": iconColor
