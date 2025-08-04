@@ -53,13 +53,13 @@ $httpClient.get(testUrl, function(err, resp, body) {
         if (ip === "失败") iconColor = failColor;
 
         $done({
-            title: "节点信息",
-            content: "查询：" + ip + 
-                     "\n国家：" + countryCN + flagEmoji,
-                     "\n延迟：" + delay +
-                     "\n运营：" + service + 
-            icon: fixedIcon,
-            "icon-color": iconColor
+          title: "节点信息",
+          content: "查询：" + ip + 
+             "\n国家：" + countryCN + flagEmoji +
+             "\n延迟：" + delay +
+             "\n运营：" + service,
+          icon: fixedIcon,
+         "icon-color": iconColo
         });
     });
 });
