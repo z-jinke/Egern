@@ -55,9 +55,9 @@ $httpClient.get(testUrl, function(err, resp, body) {
         $done({
             title: "节点信息",
             content: "查询：" + ip + 
-                     "\n运营：" + service + 
-                     "\n延迟：" + delay +
                      "\n国家：" + countryCN + flagEmoji,
+                     "\n延迟：" + delay +
+                     "\n运营：" + service + 
             icon: fixedIcon,
             "icon-color": iconColor
         });
