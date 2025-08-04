@@ -1,5 +1,3 @@
-// 2025.8.3
-
 (async () => {
   const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
     Object.fromEntries(new URLSearchParams($argument));
@@ -21,7 +19,7 @@
 })();
 
 function getData(url, title, expire) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     $httpClient.get(
       { url, headers: { "User-Agent": "Shadowrocket" } },
       (err, resp) => {
@@ -45,7 +43,7 @@ function getData(url, title, expire) {
         const remain = Math.max(total - used, 0);
 
         resolve(
-          `机场：${title}\n流量：${bytesToSize(total)}｜${bytesToSize(remain)}\n到期：${
+          `机场：${title}\n总计：${bytesToSize(total)}\n剩余：${bytesToSize(remain)}\n到期：${
             expire ? formatDate(expire) : info.expire ? formatDate(info.expire) : "无信息"
           }`
         );
