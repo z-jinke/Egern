@@ -1,8 +1,0 @@
-name: 网络测速
-
-scriptings:
-- generic:
-    name: 测速面板
-    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Speed.js   
-panels:
-- name: 测速面板
