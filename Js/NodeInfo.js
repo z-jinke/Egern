@@ -1,5 +1,7 @@
 let url = "https://ipinfo.io/json?token=fa5efe047d9b4f";
-let countryMap={
+let testUrl = "https://www.google.com/generate_204";
+
+let countryMap = {
   "HK":"香港","JP":"日本","KR":"韩国","SG":"新加坡","TW":"台湾","MO":"澳门",
   "CN":"中国","US":"美国","CA":"加拿大","GB":"英国","DE":"德国","FR":"法国",
   "NL":"荷兰","CH":"瑞士","IT":"意大利","ES":"西班牙","SE":"瑞典","NO":"挪威",
@@ -11,46 +13,51 @@ let countryMap={
 let fixedIcon = "location.north.circle.fill";
 let successColor = "#1EA2FF";
 let failColor = "#FF3B30";
+let start = Date.now();
+$httpClient.get(testUrl, function(err, resp, body) {
+    let delay = "超时";
+    if (!err && resp && resp.status === 204) {
+        delay = (Date.now() - start) + "ms";
+    }
+  
+    $httpClient.get(url, function(error, response, data) {
+        let ip = "失败";
+        let service = "失败";
+        let countryCN = "失败";
+        let flagEmoji = "";
+        let iconColor = successColor;
 
-$httpClient.get(url, function(error, response, data) {
-    let ip = "失败";
-    let service = "失败";
-    let countryCN = "失败";
-    let flagEmoji = "";
-    let iconColor = successColor;
-
-    if (!error && response && data) {
-        try {
-            let jsonData = JSON.parse(data);
-            if (jsonData.ip) ip = jsonData.ip;
-            if (jsonData.org) {
-                service = jsonData.org.replace(/^AS\d+\s+/, "");
-            }
-            if (jsonData.country && jsonData.country.length === 2) {
-                let countryCode = jsonData.country.toUpperCase();
-                flagEmoji = String.fromCodePoint(countryCode.charCodeAt(0) + 127397) +
-                            String.fromCodePoint(countryCode.charCodeAt(1) + 127397);
-                if (countryMap[countryCode]) {
-                    countryCN = countryMap[countryCode];
+        if (!error && response && data) {
+            try {
+                let jsonData = JSON.parse(data);
+                if (jsonData.ip) ip = jsonData.ip;
+                if (jsonData.org) {
+                    service = delay + "｜" + jsonData.org.replace(/^AS\d+\s+/, "");
                 } else {
-                    countryCN = countryCode;
+                    service = delay + "｜未知运营商";
                 }
+                if (jsonData.country && jsonData.country.length === 2) {
+                    let countryCode = jsonData.country.toUpperCase();
+                    flagEmoji = String.fromCodePoint(countryCode.charCodeAt(0) + 127397) +
+                                String.fromCodePoint(countryCode.charCodeAt(1) + 127397);
+                    countryCN = countryMap[countryCode] || countryCode;
+                }
+            } catch (e) {
+                iconColor = failColor;
             }
-        } catch (e) {
+        } else {
             iconColor = failColor;
         }
-    } else {
-        iconColor = failColor;
-    }
 
-    if (ip === "失败") iconColor = failColor;
+        if (ip === "失败") iconColor = failColor;
 
-    $done({
-        title: "节点信息",
-        content: "查询：" + ip + 
-                 "\n运营：" + service + 
-                 "\n国家：" + countryCN + flagEmoji,
-        icon: fixedIcon,
-        "icon-color": iconColor
+        $done({
+            title: "节点信息",
+            content: "查询：" + ip + 
+                     "\n运营：" + service + 
+                     "\n国家：" + countryCN + flagEmoji,
+            icon: fixedIcon,
+            "icon-color": iconColor
+        });
     });
 });
