@@ -1,4 +1,4 @@
-name: Spotify音乐
+name: Spotify解锁
 
 url_rewrites:
 - match: ^https:\/\/(gae2-spclient|guc3-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
