@@ -16,50 +16,50 @@ let failColor = "#FF3B30";
 let start = Date.now();
 
 $httpClient.get(testUrl, function(err, resp, body) {
-    let delay = "超时";
-    if (!err && resp && resp.status === 204) {
-        delay = (Date.now() - start) + "ms";
-    }
-  
-    $httpClient.get(url, function(error, response, data) {
-        let ip = "失败";
-        let service = "失败";
-        let countryCN = "失败";
-        let flagEmoji = "";
-        let iconColor = successColor;
+  let delay = "超时";
+  if (!err && resp && resp.status === 204) {
+    delay = (Date.now() - start) + "ms";
+  }
 
-        if (!error && response && data) {
-            try {
-                let jsonData = JSON.parse(data);
-                if (jsonData.ip) ip = jsonData.ip;
-                if (jsonData.org) {
-                    service = jsonData.org.replace(/^AS\d+\s+/, "");
-                } else {
-                    service = "未知运营商";
-                }
-                if (jsonData.country && jsonData.country.length === 2) {
-                    let countryCode = jsonData.country.toUpperCase();
-                    flagEmoji = String.fromCodePoint(countryCode.charCodeAt(0) + 127397) +
-                                String.fromCodePoint(countryCode.charCodeAt(1) + 127397);
-                    countryCN = countryMap[countryCode] || countryCode;
-                }
-            } catch (e) {
-                iconColor = failColor;
-            }
+  $httpClient.get(url, function(error, response, data) {
+    let ip = "失败";
+    let service = "失败";
+    let countryCN = "失败";
+    let flagEmoji = "";
+    let iconColor = successColor;
+
+    if (!error && response && data) {
+      try {
+        let jsonData = JSON.parse(data);
+        if (jsonData.ip) ip = jsonData.ip;
+        if (jsonData.org) {
+          service = jsonData.org.replace(/^AS\d+\s+/, "");
         } else {
-            iconColor = failColor;
+          service = "未知运营商";
         }
+        if (jsonData.country && jsonData.country.length === 2) {
+          let countryCode = jsonData.country.toUpperCase();
+          flagEmoji = String.fromCodePoint(countryCode.charCodeAt(0) + 127397) +
+                      String.fromCodePoint(countryCode.charCodeAt(1) + 127397);
+          countryCN = countryMap[countryCode] || countryCode;
+        }
+      } catch (e) {
+        iconColor = failColor;
+      }
+    } else {
+      iconColor = failColor;
+    }
 
-        if (ip === "失败") iconColor = failColor;
+    if (ip === "失败") iconColor = failColor;
 
-        $done({
-          title: "节点信息",
-          content: "查询：" + ip + 
-             "\n国家：" + countryCN + flagEmoji +
-             "\n延迟：" + delay +
-             "\n运营：" + service,
-          icon: fixedIcon,
-         "icon-color": iconColo
-        });
+    $done({
+      title: "节点信息",
+      content: "查询：" + ip +
+               "\n国家：" + countryCN + flagEmoji +
+               "\n延迟：" + delay +
+               "\n运营：" + service,
+      icon: fixedIcon,
+      "icon-color": iconColor 
     });
+  });
 });
