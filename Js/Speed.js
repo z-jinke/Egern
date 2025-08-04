@@ -1,7 +1,7 @@
 // 2025.8.3
 
 const sizeMB = 10;
-const timeout = 5000;
+const timeout = 10000;
 const downloadUrl = 'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4';
 const pingUrl = 'http://www.gstatic.com/generate_204';
 
