@@ -15,7 +15,7 @@
   const results = await Promise.all(tasks.map((p) => p.catch((e) => e)));
   $done({
     content: results.join("\n\n"),
-    icon: icon || "cloud.fill",
+    icon: icon || "antenna.radiowaves.left.and.right.circle.fill",
     "icon-color": color || "#28CDBB",
   });
 })();
