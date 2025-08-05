@@ -14,7 +14,7 @@
   $done({
     content: results.join("\n\n"),
     icon: icon || "antenna.radiowaves.left.and.right.circle.fill",
-    "icon-color": color || "#28CDBB",
+    "icon-color": color || "#64FFA9",
   });
 })();
 
