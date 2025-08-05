@@ -53,7 +53,6 @@ function getIPInfo(delay, iconColor) {
     let ip = "失败";
     let service = "失败";
     let countryCN = "失败";
-    let flagEmoji = "";
 
     if (!error && response && data) {
       try {
@@ -66,8 +65,6 @@ function getIPInfo(delay, iconColor) {
         }
         if (jsonData.country && jsonData.country.length === 2) {
           let countryCode = jsonData.country.toUpperCase();
-          flagEmoji = String.fromCodePoint(countryCode.charCodeAt(0) + 127397) +
-                      String.fromCodePoint(countryCode.charCodeAt(1) + 127397);
           countryCN = countryMap[countryCode] || countryCode;
         }
       } catch (e) {
@@ -82,7 +79,7 @@ function getIPInfo(delay, iconColor) {
     $done({
       title: "节点信息",
       content: "查询：" + ip +
-               "\n国家：" + countryCN + flagEmoji +
+               "\n国家：" + countryCN +
                "\n速度：" + delay +
                "\n运营：" + service,
       icon: fixedIcon,
