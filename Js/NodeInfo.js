@@ -11,7 +11,7 @@ let countryMap = {
 };
 
 let fixedIcon = "location.north.circle.fill";
-let successColor = "#1EA2FF";
+let successColor = "#309EFF";
 let failColor = "#FF3B30";
 let start = Date.now();
 
