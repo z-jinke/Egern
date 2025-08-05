@@ -11,7 +11,7 @@ let countryMap = {
 };
 
 let fixedIcon = "location.north.circle.fill";
-let successColor = "#2293FF";
+let successColor = "#499FFF";
 let failColor = "#FF3B30";
 
 function toMbps(bytes, ms) {
