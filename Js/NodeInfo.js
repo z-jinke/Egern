@@ -1,5 +1,5 @@
 let url = "https://ipinfo.io/json?token=fa5efe047d9b4f";
-let testUrl = "https://www.google.com/generate_204";
+let testUrl = "https://speed.cloudflare.com/__down?bytes=9000000";
 
 let countryMap = {
   "HK":"香港","JP":"日本","KR":"韩国","SG":"新加坡","TW":"台湾","MO":"澳门",
@@ -13,20 +13,47 @@ let countryMap = {
 let fixedIcon = "location.north.circle.fill";
 let successColor = "#2293FF";
 let failColor = "#FF3B30";
-let start = Date.now();
 
-$httpClient.get(testUrl, function(err, resp, body) {
-  let delay = "超时";
-  if (!err && resp && resp.status === 204) {
-    delay = (Date.now() - start) + "ms";
+function toMbps(bytes, ms) {
+  if (!bytes || !ms) return "未知";
+  let bits = bytes * 8;
+  let speed = (bits / (ms / 1000)) / 1024 / 1024;
+  return speed >= 1000 ? (speed / 1000).toFixed(2) + " Gbps" : speed.toFixed(2) + " Mbps";
+}
+
+let start = Date.now();
+let finished = false;
+
+let globalTimeout = setTimeout(() => {
+  if (!finished) {
+    finished = true;
+    getIPInfo("测速超时", failColor);
+  }
+}, 10000);
+
+$httpClient.get({ url: testUrl, timeout: 10000 }, function(error, response, data) {
+  if (finished) return;
+  finished = true;
+  clearTimeout(globalTimeout);
+
+  if (error || !data) {
+    getIPInfo("测速失败", failColor);
+    return;
   }
 
+  let ms = Date.now() - start;
+  let speed = toMbps(data.length, ms);
+  let delay = speed; 
+
+  getIPInfo(delay, successColor);
+});
+
+function getIPInfo(delay, iconColor) {
   $httpClient.get(url, function(error, response, data) {
     let ip = "失败";
     let service = "失败";
     let countryCN = "失败";
     let flagEmoji = "";
-    let iconColor = successColor;
 
     if (!error && response && data) {
       try {
@@ -56,10 +83,10 @@ $httpClient.get(testUrl, function(err, resp, body) {
       title: "节点信息",
       content: "查询：" + ip +
                "\n国家：" + countryCN + flagEmoji +
-               "\n延迟：" + delay +
+               "\n速度：" + delay +
                "\n运营：" + service,
       icon: fixedIcon,
-      "icon-color": iconColor 
+      "icon-color": iconColor
     });
   });
-});
+}
