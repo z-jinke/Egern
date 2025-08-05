@@ -1,67 +1,84 @@
 (async () => {
-  const { url1, title1, url2, title2, icon, color, expire1, expire2 } =
-    Object.fromEntries(new URLSearchParams($argument));
+  const { url1, title1, url2, title2 } = Object.fromEntries(new URLSearchParams($argument));
 
   if (!url1 && !url2) {
-    return $done({ title: "提示", content: "未填写任何订阅链接" });
+    return $done({
+      title  : "提示",
+      content: "未填写任何订阅链接",
+    });
   }
 
-  const tasks = [];
-  if (url1) tasks.push(getData(url1, title1 || "订阅1", expire1));
-  if (url2) tasks.push(getData(url2, title2 || "订阅2", expire2));
+  const result1 = url1 ? await getData(url1, title1 || "订阅1") : "";
+  const result2 = url2 ? await getData(url2, title2 || "订阅2") : "";
 
-  const results = await Promise.all(tasks.map((p) => p.catch((e) => e)));
+  const content = [result1, result2].filter(Boolean).join("\n\n");
+
   $done({
-    content: results.join("\n\n"),
-    icon: icon || "antenna.radiowaves.left.and.right.circle.fill",
-    "icon-color": color || "#44EECC",
+    content,
+    icon      : "antenna.radiowaves.left.and.right.circle.fill",
+    "icon-color": "#44EECC",
   });
 })();
 
-function getData(url, title, expire) {
-  return new Promise((resolve) => {
+function getData(url, title) {
+  return new Promise(resolve => {
+    let trafficLine = "流量：无信息";
+    let expireLine  = "到期：无信息";
+
     $httpClient.get(
       { url, headers: { "User-Agent": "Shadowrocket" } },
       (err, resp) => {
         if (err || resp.status !== 200) {
-          return resolve(`机场：${title}\n获取失败`);
+          return resolve(formatResult(title, trafficLine, expireLine));
         }
 
         const infoStr = (resp.headers["subscription-userinfo"] || "").toString();
-        if (!infoStr) {
-          return resolve(`机场：${title}\n未找到订阅信息`);
+        const info    = parseUserInfo(infoStr);
+
+        if (info.total > 0) {
+          const used   = (info.download || 0) + (info.upload || 0);
+          const remain = Math.max(info.total - used, 0);
+          trafficLine  = `流量：${bytesToSize(info.total)}｜${bytesToSize(remain)}`;
         }
 
-        const info = {};
-        infoStr.split(";").forEach((p) => {
-          const [k, v] = p.split("=");
-          if (k && v) info[k.trim()] = Number(v.trim());
-        });
+        if (info.expire) {
+          expireLine = `到期：${formatDate(info.expire)}`;
+        }
 
-        const used = (info.download || 0) + (info.upload || 0);
-        const total = info.total || 0;
-        const remain = Math.max(total - used, 0);
-
-        resolve(
-          `机场：${title}\n总计：${bytesToSize(total)}\n剩余：${bytesToSize(remain)}\n到期：${
-            expire ? formatDate(expire) : info.expire ? formatDate(info.expire) : "无信息"
-          }`
-        );
+        resolve(formatResult(title, trafficLine, expireLine));
       }
     );
   });
 }
 
-function bytesToSize(b) {
-  if (!b) return "0B";
-  const u = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(b) / Math.log(1024));
-  return (b / 1024 ** i).toFixed(2) + " " + u[i];
+function formatResult(title, traffic, expire) {
+  return `名称：${title}\n${traffic}\n${expire}`;
+}
+
+function parseUserInfo(str) {
+  if (!str) return {};
+
+  return str.split(";").reduce((acc, cur) => {
+    const [k, v] = cur.split("=");
+    if (k && v) acc[k.trim()] = Number(v.trim());
+    return acc;
+  }, {});
+}
+
+function bytesToSize(bytes) {
+  if (!bytes) return "0B";
+
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const idx   = Math.floor(Math.log(bytes) / Math.log(1024));
+  return (bytes / 1024 ** idx).toFixed(2) + " " + units[idx];
 }
 
 function formatDate(t) {
   let time = Number(t);
   if (time < 1e12) time *= 1000;
+
   const d = new Date(time);
-  return isNaN(d) ? "无效日期" : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  if (isNaN(d)) return "无效日期";
+
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
