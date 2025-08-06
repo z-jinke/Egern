@@ -16,7 +16,7 @@
   $done({
     content,
     icon      : "antenna.radiowaves.left.and.right.circle.fill",
-    "icon-color": "#44EECC",
+    "icon-color": "#3ED9BA",
   });
 })();
 
