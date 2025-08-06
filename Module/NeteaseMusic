@@ -28,6 +28,14 @@ scriptings:
       _compat.$argument: '{"GZ":true,"DT":true,"FX":true}'
     body_required: true
     binary_body: true
+- http_response:
+    name: 主页处理
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
+    script_url: https://raw.githubusercontent.com/sooyaaabo/Loon/main/Script/NeteaseMusic/NeteaseMusicAds.js
+    arguments:
+      _compat.$argument: '{"PRGG":true,"PRRK":true,"PRST":true,"HMPR":true,"PRCN":true}'
+    body_required: true
+    binary_body: true
 mitm:
   hostnames:
     includes:
