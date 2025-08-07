@@ -24,16 +24,13 @@ $httpClient.get(url, (error, resp, body) => {
       country = (json.country && json.country.length === 2) ? (countryMap[json.country.toUpperCase()] || json.country.toUpperCase()) : country;
       
       locationStr = country;
-      if (json.loc) {
-        locationStr += "｜" + json.loc.replace(",", "-");
-      }      
       iconColor = successColor;
     } catch {}
   }
 
   $done({
     title: "节点信息",
-    content: `查询：${ip}\n位置：${locationStr}\n运营：${service}`,
+    content: `位置：${locationStr}\n查询：${ip}\n运营：${service}`,
     icon: fixedIcon,
     "icon-color": iconColor
   });
