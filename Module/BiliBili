@@ -24,7 +24,7 @@ body_rewrites:
     filter: del(.data.modular_vip_section) | .data.show_creative=0 | .data.sections_v2[]|=(del(.button)|if .title=="推荐服务" then del(.title)|.items|=map(select(.id==396 or .id==397 or .id==3072 or .id==2830)) elif .title=="更多服务" then del(.title)|.items|=map(select(.id==407 or .id==410)|if .id==407 then .title="客服中心" elif .id==410 then .title="个人设置" else . end) else . end) | .data.sections_v2|=map(select(.items|length>0))
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
-    filter: .data.ipad_recommend_sections|=map(select(.id!=758 and .id!=759 and .id!=760 and .id!=792 and .id!=793 and .id!=2542 and .id!=794))|.data.ipad_more_sections|=map(select(.id!=1070 and .id!=965 and .id!=763 and .id!=764)) + [{"id":763,"title":"客服中心"}] + [{"id":764,"title":"个人设置"}]|del(.data.ipad_upper_sections)
+    filter: .data.ipad_recommend_sections|=map(select(.id!=758 and .id!=759 and .id!=760 and .id!=792 and .id!=793 and .id!=2542 and .id!=794))|.data.ipad_more_sections|=map(select(.id!=1070 and .id!=965))|del(.data.ipad_upper_sections)
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?
     filter: .data.vip.status=1 | .data.vip.type=2 | .data.vip.role=3 | .data.vip.due_date=2524608000000
