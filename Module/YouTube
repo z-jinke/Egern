@@ -1,4 +1,4 @@
-name: YouTube增强
+name: YouTube
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.*(oad|adformat|ctier=A)
@@ -6,7 +6,7 @@ map_locals:
   body: ' '
 scriptings:
 - http_response:
-    name: 广告处理
+    name: 配置处理
     match: ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
     arguments:
