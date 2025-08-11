@@ -1,0 +1,26 @@
+name: Spotify解锁
+
+map_locals:
+- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon\/
+  status_code: 200
+  body: ''
+header_rewrites:
+- replace:
+    match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/artistview\/v1\/artist
+    name: platform
+    value: ipad
+    type: request
+scriptings:
+- http_response:
+    name: 解锁处理
+    match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/(?:bootstrap|user-customization-service)
+    script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
+    arguments:
+      _compat.$argument: '{"tab":true,"useractivity":true}'
+    body_required: true
+    binary_body: true
+mitm:
+  hostnames:
+    includes:
+    - '*-spclient.spotify.com'
+    - spclient.wg.spotify.com
