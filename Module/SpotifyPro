@@ -1,15 +1,15 @@
 name: Spotify解锁
 
-map_locals:
-- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon\/
-  status_code: 200
-  body: ''
 header_rewrites:
 - replace:
     match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/artistview\/v1\/artist
     name: platform
     value: ipad
     type: request
+map_locals:
+- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon\/
+  status_code: 200
+  body: ''
 scriptings:
 - http_response:
     name: 解锁处理
