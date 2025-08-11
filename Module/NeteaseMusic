@@ -13,6 +13,12 @@ header_rewrites:
 scriptings:
 - http_response:
     name: 广告处理
+    match: ^https:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/(default\/keyword\/list|rcmd\/keyword\/get|chart\/list|chart\/detail|suggest\/keyword\/get|specialkeyword\/get)
+    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+    body_required: true
+    binary_body: true
+- http_response:
+    name: 广告处理
     match: ^https:\/\/interface\d?\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get|link\/page\/discovery\/resource\/show|link\/position\/show\/resource)
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     body_required: true
