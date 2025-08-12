@@ -4,6 +4,7 @@ map_locals:
 - match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon\/
   status_code: 200
   body: '{}'
+
 scriptings:
 - http_response:
     name: 解锁处理
@@ -13,6 +14,7 @@ scriptings:
       _compat.$argument: '{"tab":true,"useractivity":true}'
     body_required: true
     binary_body: true
+
 mitm:
   hostnames:
     includes:
