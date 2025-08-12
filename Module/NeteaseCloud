@@ -10,6 +10,7 @@ header_rewrites:
     name: x-aeapi
     value: 'false'
     type: request
+
 scriptings:
 - http_response:
     name: 广告处理
@@ -31,6 +32,7 @@ scriptings:
       _compat.$argument: '{"GZ":true,"DT":true,"FX":true}'
     body_required: true
     binary_body: true
+
 mitm:
   hostnames:
     includes:
