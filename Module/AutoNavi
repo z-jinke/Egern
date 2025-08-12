@@ -1,0 +1,38 @@
+name: 高德地图
+
+body_rewrites:
+- response_jq:
+    match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?
+    filter: delpaths([["data","tipsOperationLocation"],["obj","data","resourcePlacement"]])
+- response_jq:
+    match: ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?
+    filter: delpaths([["history_tags"]])
+- response_jq:
+    match: ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?
+    filter: delpaths([["data","carTips","data","popupInfo"]])
+map_locals:
+- match: ^https:\/\/m5\.amap\.com\/ws\/(?:aos\/main\/page\/product\/list|shield\/search\/new_hotword|faas\/amap-navigation\/card-service-(?:car-end|route-plan)|shield\/search_poi\/tips_adv|banner\/lists|faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc)|mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/search\/new_hotword|shield\/scene\/recommend|valueadded\/weather\/v2|msgbox\/pull_mp|v1\/ai_rec\/home_qs)\?
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: '{}'
+- match: ^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:order\/car\/(?:feedback\/get_card_questions|feedback\/viptips|king_toolbox_car_bubble|remark\/satisfactionConf|rights_information)|tips\/onscene_visual_optimization|pay\/web\/paySuccess\/info\/request)
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: '{}'
+scriptings:
+- http_response:
+    name: 广告处理
+    match: ^https:\/\/(?:m5\.amap\.com\/ws\/(?:aos\/perception\/publicTravel\/beforeNavi|bus\/plan\/integrate|perception\/drive\/(?:routeInfo|routePlan)|shield\/search\/(?:common\/coupon\/info|poi\/detail)|shield\/search_bff\/hotword\?|shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)|faas\/amap-navigation\/(?:card-service-plan-home|main-page)|shield\/frogserver\/aocs\/updatable\/1\?|shield\/dsp\/profile\/index\/nodefaasv3\?|shield\/search\/nearbyrec_smart\?|valueadded\/alimama\/splash_screen\?|promotion-web\/resource(\/home)?|boss\/(?:car\/order\/content_info|order_web\/friendly_information))|sns\.amap\.com\/ws\/msgbox\/pull_mp|ai\.amap\.com\/v1\/ai_rec\/home_qs)
+    script_url: https://kelee.one/Resource/JavaScript/Amap/Amap_remove_ads.js
+    body_required: true
+mitm:
+  hostnames:
+    includes:
+    - info.amap.com
+    - m5.amap.com
+    - m5-zb.amap.com
+    - oss.amap.com
+    - sns.amap.com
+    - ai.amap.com
