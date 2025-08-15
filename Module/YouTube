@@ -3,10 +3,10 @@ name: YouTube
 rules:
 - and:
     match:
-    - domain_suffix:
-        match: googlevideo.com
-    - domain_suffix:
-        match: googleapis.com
+    - domain_keyword:
+        match: google
+    - protocol:
+        match: quic
     policy: REJECT-DROP
     disabled: false
 
