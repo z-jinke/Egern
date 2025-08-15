@@ -1,5 +1,19 @@
 name: 哔哩哔哩
 
+rules:
+- or:
+    match:
+    - domain:
+        match: app.biliapi.net
+    - domain:
+        match: api.biliapi.net
+    - domain:
+        match: app.biliapi.com
+    - domain:
+        match: api.biliapi.com
+    policy: REJECT-DROP
+    disabled: false
+
 body_rewrites:
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list
