@@ -7,8 +7,7 @@ rules:
         match: google
     - protocol:
         match: quic
-    policy: REJECT-DROP
-    disabled: false
+    policy: REJECT
 
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
