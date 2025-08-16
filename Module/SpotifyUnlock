@@ -1,9 +1,10 @@
 name: Spotify解锁
 
 map_locals:
-- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon\/
+- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com\/pendragon
   status_code: 200
   body: '{}'
+  binary: true
 
 scriptings:
 - http_response:
