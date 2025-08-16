@@ -3,7 +3,7 @@ name: YouTube
 map_locals:
 - match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
   status_code: 200
-  body: '{}'
+  body: ''
   binary: true
 
 scriptings:
