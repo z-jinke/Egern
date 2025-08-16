@@ -17,7 +17,7 @@ rules:
 body_rewrites:
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list
-    filter: .data.list[]|=(.duration=0|.begin_time=1893427200|.end_time=1893427200)
+    filter: .data |= with_entries(if .key | IN("show", "event_list") then .value = [] else . end)
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
     filter: .data|=map(select(.type!="recommend"))
