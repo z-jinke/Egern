@@ -15,32 +15,26 @@ rules:
 
 body_rewrites:
   - response_jq:
-      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)\?
+      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)
       filter: .data |= with_entries(if .key | IN("show", "event_list") then .value = [] else . end)
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
       filter: .data |= map(select(.type != "recommend"))
   - response_jq:
-      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?
+      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
       filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av") and (.card_type | IN("small_cover_v2", "large_cover_single_v9", "large_cover_v1"))))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
       filter: .data.tab |= map(select(.id == 40 or .id == 41 or .id == 3502 or .id == 3503)) | .data.bottom |= map(select(.id == 177 or .id == 179 or .id == 181)) | .data.top |= map(select(.id == 3510)) | .data.top_more = []
   - response_jq:
-      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
+      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine
       filter: del(.data.modular_vip_section) | .data.show_creative = 0 | .data.sections_v2[] |= (del(.button) | if .title == "推荐服务" then del(.title) | .items |= map(select(.id == 396 or .id == 397 or .id == 3072 or .id == 2830)) elif .title == "更多服务" then del(.title) | .items |= map(select(.id == 407 or .id == 410) | if .id == 407 then .title = "客服中心" elif .id == 410 then .title = "个人设置" else . end) else . end) | .data.sections_v2 |= map(select(.items | length > 0))
   - response_jq:
-      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad\?
+      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad
       filter: .data.ipad_recommend_sections |= map(select(.id != 758 and .id != 759 and .id != 760 and .id != 792 and .id != 793 and .id != 2542 and .id != 794)) | .data.ipad_more_sections |= map(select(.id != 1070 and .id != 965) | if .id == 798 then .title = "我的设置" | . else . end) | del(.data.ipad_upper_sections)
-  - response_jq:
-      match: ^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\?
-      filter: .data[][]? = "stun.chat.bilibili.com:3478"
-  - response_jq:
-      match: ^https:\/\/api\.bilibili\.com\/pgc\/view\/v2\/app\/season\?
-      filter: del(.data.payment)
 
 map_locals:
-  - match: ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials\?
+  - match: ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials
     status_code: 200
     body: '{}'
     binary: true
