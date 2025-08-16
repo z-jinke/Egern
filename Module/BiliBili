@@ -36,8 +36,8 @@ body_rewrites:
 map_locals:
   - match: ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials
     status_code: 200
-    body: '{}'
-    binary: true
+    body: ''
+    binary: false
   - match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
     status_code: 200
     body: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
