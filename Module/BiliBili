@@ -22,7 +22,7 @@ body_rewrites:
       filter: .data |= map(select(.type != "recommend"))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?
-      filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av") and (.card_type | IN("small_cover_v2", "large_cover_single_v9", "large_cover_v1"))))
+      filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av")))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
       filter: .data.tab |= map(select(.id == 40 or .id == 41 or .id == 3502 or .id == 3503)) | .data.bottom |= map(select(.id == 177 or .id == 179 or .id == 181)) | .data.top |= map(select(.id == 3510)) | .data.top_more = []
