@@ -22,7 +22,7 @@ body_rewrites:
       filter: .data |= map(select(.type != "recommend"))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index
-      filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av") and (.card_type | IN("small_cover_v2", "large_cover_single_v9", "large_cover_v1"))))
+      filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av") and (.card_type | IN("small_cover_v2"))))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
       filter: .data.tab |= map(select(.id == 40 or .id == 41 or .id == 3502 or .id == 3503)) | .data.bottom |= map(select(.id == 177 or .id == 179 or .id == 181)) | .data.top |= map(select(.id == 3510)) | .data.top_more = []
@@ -46,6 +46,14 @@ map_locals:
     status_code: 200
     body: AAAAAAIIAQ==
     binary: true
+
+scriptings:
+- http_response:
+    name: 配置处理
+    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(unite)?\.v1\.View\/(View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
+    script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.response.js
+    body_required: true
+    binary_body: true
 
 mitm:
   hostnames:
