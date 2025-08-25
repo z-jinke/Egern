@@ -32,7 +32,7 @@ scriptings:
     match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/home\/framework\/tab
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     arguments:
-      _compat.$argument: '{"GZ":true,"DT":true,"MY":true}'
+      _compat.$argument: '{"GZ":true,"DT":true}'
     body_required: true
     binary_body: true
 
