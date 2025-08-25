@@ -54,7 +54,6 @@ scriptings:
     timeout: 5
     body_required: true
     binary_body: true
-
 mitm:
   hostnames:
     includes:
