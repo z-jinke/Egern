@@ -35,6 +35,7 @@ scriptings:
       _compat.$argument: '{"GZ":true,"DT":true,"MY":true}'
     body_required: true
     binary_body: true
+
 mitm:
   hostnames:
     includes:
