@@ -17,14 +17,9 @@ map_locals:
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get)
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get|link\/page\/discovery\/resource\/show)
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
-    body_required: true
-    binary_body: true
-- http_response:
-    name: 发现处理
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/page\/discovery\/resource\/show
-    script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
+    timeout: 5
     body_required: true
     binary_body: true
 - http_response:
@@ -33,9 +28,9 @@ scriptings:
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     arguments:
       _compat.$argument: '{"GZ":true,"DT":true}'
+    timeout: 5
     body_required: true
     binary_body: true
-
 mitm:
   hostnames:
     includes:
