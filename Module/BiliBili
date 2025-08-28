@@ -19,10 +19,13 @@ body_rewrites:
       filter: .data |= with_entries(if .key | IN("show", "event_list") then .value = [] else . end)
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
-      filter: .data |= map(select(.type != "recommend"))
+      filter: .data |= map(select(.type != "recommend") | del(.search_ranking_meta))
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?
       filter: .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av")))
+  - response_jq:
+      match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story\?
+      filter: if .data.items then .data.items |= map(select((.ad_info == null) and (.card_goto | IN("vertical_ad_av","vertical_ad_live","vertical_ad_picture") | not)) | del(.story_cart_icon,.free_flow_toast,.image_infos,.course_info,.game_info)) end
   - response_jq:
       match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
       filter: .config.tab_simplify = true | .data.tab |= map(select(.id == 40 or .id == 41 or .id == 3502 or .id == 3503)) | .data.bottom |= map(select(.id == 177 or .id == 179 or .id == 181)) | .data.top |= map(select(.id == 3510)) | .data.top_more = [] | .data.top_left = []
