@@ -22,8 +22,57 @@ scriptings:
     timeout: 5
     body_required: true
     binary_body: true
+
+- http_response:
+    name: 解析歌曲信息
+    match: ^https?:\/\/api\.spotify\.com\/v1\/tracks\?
+    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
+    arguments:
+      _compat.$argument: '{"Types":"Translate","Languages":["AUTO","ZH"],"Vendor":"Google","LogLevel":"OFF"}'
+    timeout: 10
+    body_required: true
+
+- http_request:
+    name: JSON翻译歌词参数注入
+    match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json
+    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
+    arguments:
+      _compat.$argument: '{"Types":"Translate","Languages":["AUTO","ZH"],"Vendor":"Google","LogLevel":"OFF"}'
+    timeout: 10
+    body_required: true
+
+- http_request:
+    name: Proto翻译歌词参数注入
+    match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)
+    script_url: https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
+    arguments:
+      _compat.$argument: '{"Types":"Translate","Languages":["AUTO","ZH"],"Vendor":"Google","LogLevel":"OFF"}'
+    timeout: 10
+    body_required: true
+    binary_body: true
+
+- http_response:
+    name: JSON处理翻译歌词
+    match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)format=json(.*)subtype=Translate
+    script_url: https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
+    arguments:
+      _compat.$argument: '{"Types":"Translate","Languages":["AUTO","ZH"],"Vendor":"Google","LogLevel":"OFF"}'
+    timeout: 10
+    body_required: true
+
+- http_response:
+    name: Proto处理翻译歌词
+    match: ^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/\w+\?(.*)subtype=Translate
+    script_url: https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
+    arguments:
+      _compat.$argument: '{"Types":"Translate","Languages":["AUTO","ZH"],"Vendor":"Google","LogLevel":"OFF"}'
+    timeout: 10
+    body_required: true
+    binary_body: true
+
 mitm:
   hostnames:
     includes:
-    - '*-spclient.spotify.com'
+    - api.spotify.com
     - spclient.wg.spotify.com
+    - '*-spclient.spotify.com'
