@@ -54,9 +54,12 @@ scriptings:
     name: 配置处理
     match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(unite)?\.v1\.View\/(View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
     script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.response.js
-    timeout: 5
+    arguments:
+      _compat.$argument: '{"purifyTopReplies":true}'
+    timeout: 10
     body_required: true
     binary_body: true
+
 mitm:
   hostnames:
     includes:
