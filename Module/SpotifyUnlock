@@ -8,9 +8,7 @@ url_rewrites:
 map_locals:
 - match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
   status_code: 200
-  headers:
-    Content-Type: application/json
-  body: '{}'
+  body: ' '
 
 scriptings:
 - http_response:
@@ -19,12 +17,12 @@ scriptings:
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
       _compat.$argument: '{"tab":true,"useractivity":true}'
-    timeout: 5
+    timeout: 10
     body_required: true
     binary_body: true
 
 mitm:
   hostnames:
     includes:
-    - spclient.wg.spotify.com
+    - '*.wg.spotify.com'
     - '*-spclient.spotify.com'
