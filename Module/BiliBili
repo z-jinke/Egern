@@ -1,0 +1,53 @@
+name: 哔哩哔哩
+body_rewrites:
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)\?
+    filter: .data |= with_entries(if .key | IN("show", "event_list") then .value = [] else . end)
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/search
+    filter: .data |= map(select(.type!="recommend") | del(.search_ranking_meta))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?
+    filter: if .data.items then .data.items |= map(select((.banner_item == null) and (.ad_info == null) and (.card_goto == "av") and (.card_type | IN("small_cover_v2", "large_cover_single_v9", "large_cover_v1")))) end
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story\?
+    filter: if .data.items then .data.items |= map(select((.ad_info == null) and (.card_goto | IN("vertical_ad_av", "vertical_ad_live", "vertical_ad_picture") | not)) | del(.story_cart_icon, .free_flow_toast, .image_infos, .course_info, .game_info)) end
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
+    filter: .config.tab_simplify=true|.data.tab |= map(select(.id|IN(40,41,3502,3503)))|.data.bottom |= map(select(.id|IN(177,179,181)))|.data.top |= map(select(.id==3510))|.data.top_more=[]|.data.top_left=[]
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
+    filter: del(.data.modular_vip_section)|.data.show_creative=0|.data.sections_v2[]|=(del(.button)|if .title=="推荐服务" then del(.title)|.items|=map(select(.id|IN(396,397,3072,2830))) elif .title=="更多服务" then del(.title)|.items|=map(select(.id|IN(407,410))|if .id==410 then .title="我的设置" else . end) else . end)|.data.sections_v2|=map(select(.items|length>0))
+- response_jq:
+    match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad
+    filter: .data.ipad_recommend_sections|=map(select(.id|IN(758,759,760,792,793,2542,794)|not))|.data.ipad_more_sections|=map(if .id==798 then .title="我的设置"|. else . end|select(.id|IN(1070,965)|not))|del(.data.ipad_upper_sections)
+- response_jq:
+    match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/(app-interface\/v2\/index\/feed|app-room\/v1\/index\/getInfoBy(Room|User))\?
+    filter: .data |= (del(.play_together_info, .play_together_info_v2, .activity_banner_info) | if .function_card then .function_card[] = null end | if .new_tab_info.outer_list then .new_tab_info.outer_list |= map(select(.biz_id != 33)) end | if .card_list then .card_list |= map(select(.card_type | IN("banner_v2", "activity_card_v1") | not)) end | reduce ([["show_reserve_status"], false], [["reserve_info", "show_reserve_status"], false], [["shopping_info", "is_show"], 0]) as [$path, $value] (.; if getpath($path) then setpath($path; $value) end))
+map_locals:
+- match: ^https:\/\/(api\.bilibili\.com\/x\/vip\/ads\/materials|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?)
+  status_code: 200
+  headers:
+    Content-Type: application/json
+  body: '{}'
+- match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.view\.v1\.View\/TFInfo$
+  body: AAAAAAIIAQ==
+  binary: true
+- match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
+  body: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
+  binary: true
+scriptings:
+- http_response:
+    name: 广告处理
+    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(unite)?\.v1\.View\/(View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
+    script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.response.js
+    timeout: 10
+    body_required: true
+    binary_body: true
+mitm:
+  hostnames:
+    includes:
+    - app.bilibili.com
+    - api.bilibili.com
+    - api.live.bilibili.com
+    - grpc.biliapi.net
