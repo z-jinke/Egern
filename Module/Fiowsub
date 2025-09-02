@@ -1,0 +1,15 @@
+name: 订阅信息
+compat_arguments:
+  订阅1: ''
+  名称A: ''
+  订阅2: ''
+  名称B: ''
+scriptings:
+- generic:
+    name: 订阅面板
+    script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Fiowsub.js
+    arguments:
+      _compat.$argument: url1=&title1=&url2=&title2=
+panels:
+- name: 订阅面板
+  title: 订阅信息
