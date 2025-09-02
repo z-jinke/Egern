@@ -1,0 +1,28 @@
+name: YouTube(Music)
+rules:
+- and:
+    match:
+    - domain_keyword:
+        match: google
+    - protocol:
+        match: quic
+    policy: REJECT
+map_locals:
+- match: ^https:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad
+  status_code: 200
+  body: ' '
+scriptings:
+- http_response:
+    name: 广告处理
+    match: ^https:\/\/y[a-z]*i\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$
+    script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js
+    arguments:
+      _compat.$argument: '{"blockUpload":true,"blockShorts":true,"blockImmersive":true}'
+    timeout: 10
+    body_required: true
+    binary_body: true
+mitm:
+  hostnames:
+    includes:
+    - '*.googlevideo.com'
+    - youtubei.googleapis.com
