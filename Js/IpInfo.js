@@ -28,7 +28,7 @@ $httpClient.get(url, (error, resp, body) => {
 
   $done({
     title: "节点信息",
-    content: `所在地：${locationStr}\nIP查询：${ip}\n运营商：${service}`,
+    content: `所在地：${locationStr}\nIP地址：${ip}\n运营商：${service}`,
     icon: fixedIcon,
     "icon-color": iconColor
   });
