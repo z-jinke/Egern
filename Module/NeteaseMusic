@@ -1,12 +1,33 @@
 name: 网易云音乐
 map_locals:
-- match: ^https:\/\/(ipv4|interface\d?)\.music\.163\.com\/(e?api\/(ad|resource\/comments?\/musiciansaid|community\/friends\/fans-group\/artist\/group\/get|user\/sub\/artist|music\/songshare\/text\/recommend\/get|mine\/applet\/redpoint|resniche\/position\/play\/new\/get|mlivestream\/entrance\/playpage|link\/(position\/show\/strategy|scene\/show)|ios\/version|v\d\/content\/exposure\/comment\/banner)|w?e?api\/(side-bar\/mini-program\/music-service\/account|delivery\/(batch-deliver|deliver)|moment\/tab\/info\/get|yunbei\/account\/entrance\/get|search\/(chart|default|rcmd\/keyword|specialkeyword)|resource-exposure\/|activity\/bonus\/playpage\/time\/query))
+- match: ^https:\/\/(ipv4|interface\d?)\.music\.163\.com\/(w?eapi\/(resource-exposure\/)?activity|e?api\/comment\/feed\/inserted\/resources|e?api\/resource-exposure\/config|e?api\/content\/activity\/music\/jar\/template\/list)
   status_code: 200
   body: ' '
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get|link\/page\/discovery\/resource\/show)
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(ad\/(loading\/get|loading\/current|get)|link\/(position\/show\/resource|scene\/show\/resource)|vip\/cashier\/tspopup\/get)
+    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+    timeout: 10
+    body_required: true
+    binary_body: true
+- http_response:
+    name: 搜索处理
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/search\/(default\/keyword\/list|rcmd\/keyword\/get|chart\/list|chart\/detail|suggest\/keyword\/get|specialkeyword\/get)
+    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+    timeout: 10
+    body_required: true
+    binary_body: true
+- http_response:
+    name: 推荐处理
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/page\/rcmd\/resource\/show
+    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+    timeout: 10
+    body_required: true
+    binary_body: true
+- http_response:
+    name: 发现处理
+    match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/link\/page\/discovery\/resource\/show
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     timeout: 10
     body_required: true
