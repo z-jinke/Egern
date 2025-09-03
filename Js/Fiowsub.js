@@ -53,7 +53,7 @@ function getData(url, title) {
 }
 
 function formatResult(title, traffic, expire) {
-  return `名称：${title}\n${traffic}\n${expire}`;
+  return `机场：${title}\n${traffic}\n${expire}`;
 }
 
 function parseUserInfo(str) {
