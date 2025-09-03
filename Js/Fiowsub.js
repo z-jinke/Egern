@@ -39,7 +39,7 @@ function getData(url, title) {
 
         if (info.total > 0) {
           const used = (info.download || 0) + (info.upload || 0);
-          trafficLine = `流量：${bytesToSize(used)} ｜ ${bytesToSize(info.total)}`;
+          trafficLine = `用量：${bytesToSize(used)} ｜ ${bytesToSize(info.total)}`;
         }
 
         if (info.expire) {
