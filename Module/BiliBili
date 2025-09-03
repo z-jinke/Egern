@@ -28,17 +28,11 @@ map_locals:
 - match: ^https:\/\/(api\.bilibili\.com\/x\/vip\/ads\/materials|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?)
   status_code: 200
   body: ' '
-- match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.view\.v1\.View\/TFInfo$
-  body: AAAAAAIIAQ==
-  binary: true
-- match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
-  body: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
-  binary: true
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|view(unite)?\.v1\.View\/(View|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|main\.community\.reply\.v1\.Reply\/MainList)$
-    script_url: https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.response.js
+    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(community\.service\.dm\.v1\.DM\/DmView|app\.interface\.v1\.Teenagers\/ModeStatus|main\.community\.reply\.v1\.Reply\/MainList|polymer\.app\.search\.v1\.Search\/SearchAll|app\.dynamic\.v2\.Dynamic\/DynAll|app\.(view|viewunite)\.v1\.View\/(View|ViewProgress))$
+    script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Bilibili/bilibili.helper.js
     timeout: 10
     body_required: true
     binary_body: true
