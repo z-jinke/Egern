@@ -27,9 +27,7 @@ body_rewrites:
 map_locals:
 - match: ^https:\/\/(api\.bilibili\.com\/x\/vip\/ads\/materials|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?)
   status_code: 200
-  headers:
-    Content-Type: application/json
-  body: '{}'
+  body: ' '
 - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.view\.v1\.View\/TFInfo$
   body: AAAAAAIIAQ==
   binary: true
@@ -49,5 +47,5 @@ mitm:
     includes:
     - app.bilibili.com
     - api.bilibili.com
-    - api.live.bilibili.com
     - grpc.biliapi.net
+    - api.live.bilibili.com
