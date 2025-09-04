@@ -1,6 +1,6 @@
 name: Spotify解锁
 map_locals:
-- match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon)
+- match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon|merch-npv-service)
   status_code: 200
   body: ' '
 scriptings:
