@@ -1,8 +1,9 @@
 name: Spotify解锁
 header_rewrites:
-- delete:
+- replace:
     match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap|user-customization-service)
     name: if-none-match
+    value: 0123456789abcdef
     type: request
 map_locals:
 - match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon)
