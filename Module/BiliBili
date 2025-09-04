@@ -31,7 +31,7 @@ map_locals:
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(community\.service\.dm\.v1\.DM\/DmView|app\.interface\.v1\.Teenagers\/ModeStatus|main\.community\.reply\.v1\.Reply\/MainList|polymer\.app\.search\.v1\.Search\/SearchAll|app\.dynamic\.v2\.Dynamic\/DynAll|app\.(view|viewunite)\.v1\.View\/(View|ViewProgress))$
+    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.interface\.v1\.Teenagers\/ModeStatus|main\.community\.reply\.v1\.Reply\/MainList|app\.dynamic\.v2\.Dynamic\/DynAll|app\.(view|viewunite)\.v1\.View\/(View|ViewProgress))$
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Bilibili/bilibili.helper.js
     timeout: 10
     body_required: true
