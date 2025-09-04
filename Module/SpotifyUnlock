@@ -1,16 +1,15 @@
 name: Spotify解锁
 url_rewrites:
-- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
-  location: https://spclient.wg.spotify.com/artistview/v1/artist/$1&platform=ipad
-  status_code: 307
-map_locals:
-- match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?\/pendragon\/
-  status_code: 200
-  body: ' '
+- match: ^https:\/\/(spclient\.wg\.spotify\.com):443\/(artistview\/v1\/artist|album-entity-view\/v2\/album)
+  location: https://$1/$2
+  status_code: 302
+- match: ^https:\/\/spclient\.wg\.spotify\.com\/(artistview\/v1\/artist|album-entity-view\/v2\/album)\?platform=iphone
+  location: https://$1/$2?platform=ipad
+  status_code: 302
 scriptings:
 - http_response:
     name: 解锁处理
-    match: ^https:\/\/(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?\/(?:bootstrap|user-customization-service)
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/(?:bootstrap|user-customization-service)
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
       _compat.$argument: '{"tab":true,"useractivity":true}'
@@ -20,5 +19,4 @@ scriptings:
 mitm:
   hostnames:
     includes:
-    - '*spclient.spotify.com'
     - spclient.wg.spotify.com
