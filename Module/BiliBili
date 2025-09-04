@@ -12,6 +12,12 @@ rules:
     - domain:
         match: app.biliapi.com
     policy: REJECT
+header_rewrites:
+- replace:
+    match: ^https:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/(bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus|bilibili\.app\.(view|viewunite)\.v1\.View\/(View|ViewProgress)|bilibili\.main\.community\.reply\.v1\.Reply\/MainList|bilibili\.app\.dynamic\.v2\.Dynamic\/DynAll)$
+    name: x-bili-network-bin
+    value: CAIQBBoGbW9iaWxl
+    type: request
 body_rewrites:
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)\?
@@ -44,7 +50,7 @@ map_locals:
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.interface\.v1\.Teenagers\/ModeStatus|main\.community\.reply\.v1\.Reply\/MainList|app\.dynamic\.v2\.Dynamic\/DynAll|app\.(view|viewunite)\.v1\.View\/(View|ViewProgress))$
+    match: ^https:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/(bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus|bilibili\.app\.(view|viewunite)\.v1\.View\/(View|ViewProgress)|bilibili\.main\.community\.reply\.v1\.Reply\/MainList|bilibili\.app\.dynamic\.v2\.Dynamic\/DynAll)$
     script_url: https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Bilibili/bilibili.helper.js
     timeout: 10
     body_required: true
