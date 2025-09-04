@@ -1,6 +1,7 @@
 name: 哔哩哔哩
 rules:
 - or:
+    name: 广告
     match:
     - domain:
         match: app.biliapi.net
@@ -12,6 +13,7 @@ rules:
         match: app.biliapi.com
     policy: REJECT
 - and:
+    name: 广告
     match:
     - domain_suffix:
         match: chat.bilibili.com
