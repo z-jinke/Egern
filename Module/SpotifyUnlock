@@ -3,6 +3,11 @@ map_locals:
 - match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon)
   status_code: 200
   body: ''
+header_rewrites:
+- delete:
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap|user-customization-service)
+    name: if-none-match
+    type: request
 scriptings:
 - http_response:
     name: 解锁处理
