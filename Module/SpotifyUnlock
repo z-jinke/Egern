@@ -16,5 +16,4 @@ scriptings:
 mitm:
   hostnames:
     includes:
-    - '*-spclient.spotify.com'
     - spclient.wg.spotify.com
