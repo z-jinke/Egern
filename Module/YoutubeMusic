@@ -1,6 +1,7 @@
 name: YouTube(Music)
 rules:
 - and:
+    name: 广告
     match:
     - domain_keyword:
         match: google
