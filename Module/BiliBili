@@ -27,7 +27,7 @@ body_rewrites:
     filter: .data.items?|=map(select(.ad_info==null and (.card_goto|IN("vertical_ad_av","vertical_ad_live","vertical_ad_picture")|not))|del(.story_cart_icon,.free_flow_toast,.image_infos,.course_info,.game_info))
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab
-    filter: .config.tab_simplify=true|.data.tab|=map(select(.id|IN(40,41,3502,3503)))|.data.bottom|=map(select(.id|IN(177,179,181)))|.data.top|=map(select(.id==3510))|.data.top_more=[]|.data.top_left=[]
+    filter: .data.tab|=map(select(.id|IN(39,40,41,3502,3503)))|.data.bottom|=map(select(.id|IN(177,179,181)))|.data.top|=map(select(.id==3510 or .id==3504))|.data.top_more=[]|.data.top_left=[]
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?
     filter: del(.data.modular_vip_section)|.data.show_creative=0|.data.sections_v2|=map(del(.button)|if .title=="推荐服务" then .items|=map(select(.id|IN(396,397,3072,2830)))|del(.title) elif .title=="更多服务" then .items|=map(if .id==410 then .title="我的设置" else . end|select(.id|IN(407,410)))|del(.title) else . end)|.data.sections_v2|=map(select(.items|length>0))
