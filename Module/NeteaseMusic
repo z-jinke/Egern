@@ -29,7 +29,7 @@ scriptings:
     binary_body: true
 - http_response:
     name: 推荐处理
-    match: ^https:\/\/(?:interface\d?)\.music\.163\.com\/eapi\/link\/page\/rcmd\/(resource\/show|block\/resource\/multi\/refresh)
+    match: ^https:\/\/(?:interface\d?)\.music\.163\.com\/eapi\/(link\/page\/rcmd\/resource\/show|homepage\/block\/page)
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     arguments:
       _compat.$argument: '{"PRGG":true,"PRST":true}'
