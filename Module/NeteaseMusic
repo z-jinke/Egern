@@ -1,13 +1,29 @@
 name: 网易云音乐
+rules:
+- or:
+    match:
+    - domain:
+        match: ipv6.music.163.com
+    - domain:
+        match: ipv4.music.163.com
+    - domain:
+        match: iadmusicmatvideo.music.126.net
+    - domain:
+        match: iadmusicmat.music.126.net
+    - domain:
+        match: iadmatapk.nosdn.127.net
+    - domain:
+        match: iadmat.nosdn.127.net
+    policy: REJECT
 map_locals:
-- match: ^https:\/\/(ipv4|interface\d?)\.music\.163\.com\/(w?eapi\/(resource-exposure\/)?activity|e?api\/comment\/feed\/inserted\/resources|e?api\/resource-exposure\/config|e?api\/content\/activity\/music\/jar\/template\/list)
+- match: ^https?:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/(?:e?api|weapi)\/(?:delivery\/(?:batch-)?deliver|moment\/tab\/info|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance|community\/friends\/fans-group\/artist\/group|mine\/applet\/redpoint|music\/songshare\/text\/recommend|resniche\/position\/play\/new|resniche\/tspopup\/show|resource\/comments?\/musiciansaid|user\/sub\/artist|ios\/version|mlivestream\/entrance\/playpage|link\/(?:position\/show\/strategy|scene\/show\/resource)|v1\/content\/exposure\/comment\/banner|activity\/bonus\/playpage\/time\/query|resource-exposure|search\/(?:chart|rcmd\/keyword|specialkeyword|default)|my\/podcast\/tab\/recommend|(?:ocpc\/)?ad)\/?
   status_code: 200
   body: ' '
 scriptings:
 - http_response:
     name: 广告处理
-    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(ad\/(loading\/get|loading\/current|get)|link\/(position\/show\/resource|scene\/show\/resource)|vip\/cashier\/tspopup\/get)
-    script_url: https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+    match: ^https:\/\/(?:ipv4|interface\d?)\.music\.163\.com\/eapi\/(?:batch|v2\/resource\/comment\/floor\/get|link\/position\/show\/resource)
+    script_url: https://raw.githubusercontent.com/sooyaaabo/Loon/main/Script/NeteaseMusic/NeteaseMusicAds.js
     timeout: 10
     body_required: true
     binary_body: true
@@ -44,4 +60,4 @@ scriptings:
 mitm:
   hostnames:
     includes:
-    - '*.music.163.com'
+    - 'interface*.music.163.com'
