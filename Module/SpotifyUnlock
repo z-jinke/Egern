@@ -1,12 +1,12 @@
 name: Spotify解锁
-url_rewrites:
-- match: ^https:\/\/(?:\w+-spclient)\.spotify\.com(?::443)?\/artistview\/v1\/artist\/(.*)&platform=iphone
-  location: https://spclient.wg.spotify.com/artistview/v1/artist/$1&platform=ipad
-  status_code: 307
+map_locals:
+- match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon)
+  status_code: 200
+  body: ''
 scriptings:
 - http_response:
     name: 解锁处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/(?:bootstrap|user-customization-service)
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap|user-customization-service)
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
       _compat.$argument: '{"tab":true,"useractivity":true}'
