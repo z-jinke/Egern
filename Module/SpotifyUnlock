@@ -1,10 +1,4 @@
 name: Spotify解锁
-header_rewrites:
-- replace:
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize
-    name: if-none-match
-    value: 0123456789abcdef
-    type: request
 map_locals:
 - match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon)
   status_code: 200
