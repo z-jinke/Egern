@@ -7,14 +7,6 @@ rules:
         match: ipv6.music.163.com
     - domain:
         match: ipv4.music.163.com
-    - domain:
-        match: iadmusicmatvideo.music.126.net
-    - domain:
-        match: iadmusicmat.music.126.net
-    - domain:
-        match: iadmatapk.nosdn.127.net
-    - domain:
-        match: iadmat.nosdn.127.net
     policy: REJECT
 map_locals:
 - match: ^https:\/\/(?:interface\d?)\.music\.163\.com\/(?:e?api|weapi)\/(?:delivery\/(?:batch-)?deliver|moment\/tab\/info|side-bar\/mini-program\/music-service\/account|yunbei\/account\/entrance|community\/friends\/fans-group\/artist\/group|mine\/applet\/redpoint|music\/songshare\/text\/recommend|resniche\/position\/play\/new|resniche\/tspopup\/show|resource\/comments?\/musiciansaid|user\/sub\/artist|ios\/version|mlivestream\/entrance\/playpage|link\/(?:position\/show\/strategy|scene\/show\/resource)|v1\/content\/exposure\/comment\/banner|activity\/bonus\/playpage\/time\/query|resource-exposure|search\/(?:chart|rcmd\/keyword|specialkeyword|default)|my\/podcast\/tab\/recommend|(?:ocpc\/)?ad)\/?
@@ -33,7 +25,7 @@ scriptings:
     match: ^https:\/\/(?:interface\d?)\.music\.163\.com\/eapi\/(?:homepage\/block\/page|link\/page\/rcmd\/(?:block\/resource\/multi\/refresh|resource\/show))
     script_url: https://kelee.one/Resource/JavaScript/NeteaseCloudMusic/NeteaseCloudMusic_remove_ads.js
     arguments:
-      _compat.$argument: '{"PRGG":true,"PRST":true,"PRRK":true}'
+      _compat.$argument: '{"PRGG":true,"PRST":true}'
     timeout: 10
     body_required: true
     binary_body: true
