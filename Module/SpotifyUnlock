@@ -1,7 +1,7 @@
 name: Spotify解锁
 header_rewrites:
 - replace:
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap|user-customization-service)
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize
     name: if-none-match
     value: 0123456789abcdef
     type: request
@@ -12,7 +12,7 @@ map_locals:
 scriptings:
 - http_response:
     name: 解锁处理
-    match: ^https:\/\/spclient\.wg\.spotify\.com\/(bootstrap|user-customization-service)
+    match: ^https:\/\/spclient\.wg\.spotify\.com\/user-customization-service\/v1\/customize
     script_url: https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js
     arguments:
       _compat.$argument: '{"tab":true,"useractivity":true}'
