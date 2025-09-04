@@ -1,4 +1,27 @@
 name: 哔哩哔哩
+rules:
+- or:
+    match:
+    - domain:
+        match: app.biliapi.net
+    - domain:
+        match: api.biliapi.net
+    - domain:
+        match: api.biliapi.com
+    - domain:
+        match: app.biliapi.com
+    policy: REJECT
+- and:
+    match:
+    - domain_suffix:
+        match: chat.bilibili.com
+    - or:
+        match:
+        - domain_keyword:
+            match: stun
+        - domain_keyword:
+            match: tracker
+    policy: REJECT
 body_rewrites:
 - response_jq:
     match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)\?
