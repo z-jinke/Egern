@@ -1,15 +1,12 @@
 name: 订阅信息
 compat_arguments:
-  订阅A: ''
-  名称A: ''
-  订阅B: ''
-  名称B: ''
+  订阅: ''
+  名称: ''
 scriptings:
 - generic:
     name: 订阅面板
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Fiowsub.js
     arguments:
-      _compat.$argument: "url1={{{订阅A}}}&title1={{{名称A}}}&url2={{{订阅B}}}&title2={{{名称B}}}"
+      _compat.$argument: "url={{{订阅}}}&title={{{名称}}}"
 panels:
 - name: 订阅面板
-  title: 订阅信息
