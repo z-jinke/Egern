@@ -8,11 +8,11 @@
     const used = info.download + info.upload;
     const total = info.total;
 
-    const expireDaysLeft = getExpireDaysLeft(info.expire);
+    const expireInfo = getExpireInfo(info.expire);
 
     const content = [
-      expireDaysLeft ? `到期日期：${expireDaysLeft}天` : null,
-      `总计流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`
+      expireInfo ? `到期：${expireInfo.date} 剩余：${expireInfo.days}天` : null,
+      `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`
     ].filter(Boolean);
 
     $done({
@@ -76,8 +76,9 @@ async function getDataInfo(url) {
   }
 }
 
-function getExpireDaysLeft(expire) {
+function getExpireInfo(expire) {
   if (!expire) return null;
+
   const now = new Date().getTime();
   let expireTime;
 
@@ -90,7 +91,12 @@ function getExpireDaysLeft(expire) {
   }
 
   const daysLeft = Math.ceil((expireTime - now) / (1000 * 60 * 60 * 24));
-  return daysLeft > 0 ? daysLeft : null;
+  if (daysLeft <= 0) return null;
+
+  const date = new Date(expireTime);
+  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+
+  return { days: daysLeft, date: dateStr };
 }
 
 function bytesToSize(bytes) {
