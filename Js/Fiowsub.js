@@ -12,8 +12,7 @@
 
     const content = [
       expireDaysLeft ? `到期日期：${expireDaysLeft}天` : null,
-      `总计流量：${bytesToSize(total)}`,
-      `已用流量：${bytesToSize(used)}`
+      `总计流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`
     ].filter(Boolean);
 
     $done({
