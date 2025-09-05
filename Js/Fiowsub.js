@@ -8,13 +8,16 @@
     const used = info.download + info.upload;
     const total = info.total;
 
-    const expireInfo = getExpireInfo(info.expire);
+    const expireInfo = info.expire ? getExpireInfo(info.expire) : null;
+
+    const resetInfo = args.resetDay ? getResetInfo(args.resetDay) : null;
 
     const content = [
       expireInfo ? `到期：${expireInfo.date}` : null,
-      `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`
-    ].filter(Boolean);
-
+      `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`,
+      resetInfo ? `距离下次流量重置${resetInfo.days}天` : null
+    ].filter(Boolean); 
+    
     $done({
       title: args.title,
       content: content.join("\n"),
@@ -38,7 +41,7 @@ function getArgs() {
     if (index > -1) {
       const key = item.substring(0, index);
       const value = item.substring(index + 1);
-      if (key === "url" || key === "title") {
+      if (key === "url" || key === "title" || key === "resetDay") {
         args[key] = key === "url" ? value : decodeURIComponent(value);
       }
     }
@@ -90,9 +93,24 @@ function getExpireInfo(expire) {
   }
 
   const date = new Date(expireTime);
-  const dateStr = `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2,"0")}月${String(date.getDate()).padStart(2,"0")}日 ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`;
+  const dateStr = `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, "0")}月${String(date.getDate()).padStart(2, "0")}日`;
 
   return { date: dateStr };
+}
+
+function getResetInfo(resetDay) {
+  if (!resetDay) return null;
+  const now = new Date();
+  const day = parseInt(resetDay);
+  if (isNaN(day) || day < 1 || day > 31) return null;
+
+  let nextReset = new Date(now.getFullYear(), now.getMonth(), day);
+  if (now.getDate() >= day) {
+    nextReset = new Date(now.getFullYear(), now.getMonth() + 1, day);
+  }
+
+  const daysLeft = Math.ceil((nextReset - now) / (1000 * 60 * 60 * 24));
+  return { days: daysLeft };
 }
 
 function bytesToSize(bytes) {
