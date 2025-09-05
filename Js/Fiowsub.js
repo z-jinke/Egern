@@ -1,5 +1,3 @@
-// 2025.9.5
-
 (async () => {
   try {
     const args = getArgs();
@@ -9,13 +7,14 @@
 
     const used = info.download + info.upload;
     const total = info.total;
-    const content = [`用量：${bytesToSize(used)} / ${bytesToSize(total)}`];
 
-    // 只显示剩余天数
     const expireDaysLeft = getExpireDaysLeft(info.expire);
-    if (expireDaysLeft) {
-      content.push(`到期：距离剩余：${expireDaysLeft}天`);
-    }
+
+    const content = [
+      expireDaysLeft ? `到期日期：${expireDaysLeft}天` : null,
+      `总计流量：${bytesToSize(total)}`,
+      `已用流量：${bytesToSize(used)}`
+    ].filter(Boolean);
 
     $done({
       title: args.title,
@@ -33,9 +32,6 @@
   }
 })();
 
-/**
- * 解析参数，仅保留 URL 和标题
- */
 function getArgs() {
   const args = {};
   $argument.split("&").forEach(item => {
@@ -51,11 +47,8 @@ function getArgs() {
   return args;
 }
 
-/**
- * 获取用户信息
- */
 function getUserInfo(url) {
-  if (!url) return Promise.reject("未提供有效的订阅链接");
+  if (!url) return Promise.reject("未提供有效订阅链接");
 
   const request = { headers: { "User-Agent": "Quantumult%20X" }, url };
   return new Promise((resolve, reject) => {
@@ -64,19 +57,16 @@ function getUserInfo(url) {
       if (resp.status !== 200) return reject(`服务器返回非200状态码: ${resp.status}`);
       const header = Object.keys(resp.headers).find(key => key.toLowerCase() === "subscription-userinfo");
       if (header) return resolve(resp.headers[header]);
-      reject("链接响应头不带有流量信息");
+      reject("响应头没有流量信息");
     });
   });
 }
 
-/**
- * 获取数据信息
- */
 async function getDataInfo(url) {
   try {
     const data = await getUserInfo(url);
     const matches = data.match(/\w+=[\d.eE+-]+/g);
-    if (!matches || matches.length === 0) throw new Error("无法解析返回的数据");
+    if (!matches || matches.length === 0) throw new Error("无法解析返回数据");
     return Object.fromEntries(matches.map(item => {
       const [key, value] = item.split("=");
       return [key, Number(value)];
@@ -87,9 +77,6 @@ async function getDataInfo(url) {
   }
 }
 
-/**
- * 计算到期剩余天数
- */
 function getExpireDaysLeft(expire) {
   if (!expire) return null;
   const now = new Date().getTime();
@@ -107,9 +94,6 @@ function getExpireDaysLeft(expire) {
   return daysLeft > 0 ? daysLeft : null;
 }
 
-/**
- * 字节转换为可读大小
- */
 function bytesToSize(bytes) {
   if (bytes === 0) return "0B";
   const units = ["B", "KB", "MB", "GB", "TB"];
