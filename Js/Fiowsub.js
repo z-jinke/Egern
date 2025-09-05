@@ -14,7 +14,7 @@
 
     const content = [
       expireInfo ? `到期：${expireInfo.date}` : null,
-      `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`,
+      `流量：${bytesToSize(total)}｜${bytesToSize(used)}`,
       resetInfo ? `距离下次流量重置${resetInfo.days}天` : null
     ].filter(Boolean); 
     
