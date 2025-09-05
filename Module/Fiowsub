@@ -2,11 +2,12 @@ name: 订阅信息
 compat_arguments:
   订阅: ''
   名称: ''
+  重置: ''
 scriptings:
 - generic:
     name: 订阅面板
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Fiowsub.js
     arguments:
-      _compat.$argument: "url={{{订阅}}}&title={{{名称}}}"
+      _compat.$argument: "url={{{订阅}}}&title={{{名称}}}&resetDay={{{重置}}}"
 panels:
 - name: 订阅面板
