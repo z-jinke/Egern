@@ -1,6 +1,6 @@
 /**
- * 作者: zjinke
- * 功能: 自用修改版 Egern 订阅流量监控脚本
+ * 作者: jinke
+ * 功能: 自用修改版订阅流量监控脚本
  * 引用: https://github.com/cc63/Surge/raw/refs/heads/main/Module/Panel/Sub-info/Moore/Sub-info.js
  */
 
@@ -17,17 +17,16 @@
     const expireInfo = info.expire ? getExpireInfo(info.expire) : null;
     const resetInfo = args.resetDay ? getResetInfo(args.resetDay) : null;
 
-    const lines = [];
-    lines.push(`流量${bytesToSize(total)}｜${bytesToSize(used)}`);
-    
-    let secondLine = [];
-    if (expireInfo) secondLine.push(`到期${expireInfo.date}`);
-    if (resetInfo) secondLine.push(`流量重置${resetInfo.days}天`);
-    if (secondLine.length) lines.push(secondLine.join(" "));
+    const firstLine = `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`;
+
+    let secondParts = [];
+    if (expireInfo) secondParts.push(`到期：${expireInfo.date}`);
+    if (resetInfo) secondParts.push(`重置：${resetInfo.days}天`);
+    const secondLine = secondParts.join("｜");
 
     $done({
       title: args.title || "订阅流量",
-      content: lines.join("\n"),
+      content: secondLine ? `${firstLine}\n${secondLine}` : firstLine,
       icon: "antenna.radiowaves.left.and.right.circle.fill",
       "icon-color": "#00E28F",
     });
@@ -100,8 +99,7 @@ function getExpireInfo(expire) {
   }
 
   const date = new Date(expireTime);
-  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
-
+  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2,"0")}.${String(date.getDate()).padStart(2,"0")}`;
   return { date: dateStr };
 }
 
