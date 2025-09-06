@@ -1,7 +1,6 @@
 /**
- * 作者: jinke
- * 功能: 自用修改版订阅流量监控脚本
- * 引用: https://github.com/cc63/Surge/raw/refs/heads/main/Module/Panel/Sub-info/Moore/Sub-info.js
+ * 作者: zjinke
+ * 功能: 自用修改版订阅流量监控脚本（增加使用进度百分比趣味表情）
  */
 
 (async () => {
@@ -17,16 +16,22 @@
     const expireInfo = info.expire ? getExpireInfo(info.expire) : null;
     const resetInfo = args.resetDay ? getResetInfo(args.resetDay) : null;
 
-    const firstLine = `流量：${bytesToSize(total)}｜已用：${bytesToSize(used)}`;
+    const percent = total > 0 ? Math.round((used / total) * 100) : 0;
+    let emoji = "🥰";
+    if (percent >= 50 && percent < 60) emoji = "😐";
+    else if (percent >= 60 && percent < 80) emoji = "😩";
+    else if (percent >= 80 && percent < 100) emoji = "🥵";
 
-    let secondParts = [];
-    if (expireInfo) secondParts.push(`到期：${expireInfo.date}`);
-    if (resetInfo) secondParts.push(`重置：${resetInfo.days}天`);
-    const secondLine = secondParts.join("｜");
+    const content = [
+      `进度：${percent} % ${emoji}`,
+      `流量：${bytesToSize(total)} 已用：${bytesToSize(used)}`,
+      expireInfo ? `到期：${expireInfo.date}` : null,
+      resetInfo ? `距离流量重置${resetInfo.days}天` : null
+    ].filter(Boolean);
 
     $done({
       title: args.title || "订阅流量",
-      content: secondLine ? `${firstLine}\n${secondLine}` : firstLine,
+      content: content.join("\n"),
       icon: "antenna.radiowaves.left.and.right.circle.fill",
       "icon-color": "#00E28F",
     });
@@ -99,7 +104,8 @@ function getExpireInfo(expire) {
   }
 
   const date = new Date(expireTime);
-  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2,"0")}.${String(date.getDate()).padStart(2,"0")}`;
+  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}月${String(date.getDate()).padStart(2, "0")}号`;
+
   return { date: dateStr };
 }
 
