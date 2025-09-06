@@ -1,4 +1,4 @@
-name: 订阅信息
+name: 订阅查询信息
 compat_arguments:
   备注名称: ''
   订阅地址: ''
