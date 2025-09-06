@@ -24,9 +24,9 @@
 
     const content = [
       `进度：${percent} % ${emoji}`,
-      `流量：${bytesToSize(total)} 已用 ${bytesToSize(used)}`,
+      `流量：${bytesToSize(total)}｜${bytesToSize(used)}`,
       expireInfo ? `到期：${expireInfo.date}` : null,
-      resetInfo ? `计算距离流量重置${resetInfo.days}天` : null
+      resetInfo ? `距离流量重置剩余${resetInfo.days}天` : null
     ].filter(Boolean);
 
     $done({
