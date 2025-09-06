@@ -20,13 +20,13 @@
     let emoji = "🥰";
     if (percent >= 50 && percent < 60) emoji = "😐";
     else if (percent >= 60 && percent < 80) emoji = "😩";
-    else if (percent >= 80 && percent < 100) emoji = "🥵";
+    else if (percent >= 80 && percent < 99) emoji = "🥵";
 
     const content = [
       `进度：${percent} % ${emoji}`,
-      `流量：${bytesToSize(total)} 已用：${bytesToSize(used)}`,
+      `流量：${bytesToSize(total)} 已用 ${bytesToSize(used)}`,
       expireInfo ? `到期：${expireInfo.date}` : null,
-      resetInfo ? `距离流量重置${resetInfo.days}天` : null
+      resetInfo ? `计算距离流量重置${resetInfo.days}天` : null
     ].filter(Boolean);
 
     $done({
