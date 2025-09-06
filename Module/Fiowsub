@@ -1,9 +1,9 @@
 name: 订阅信息
 compat_arguments:
-  订阅: ''
+  地址: ''
   名称: ''
   重置: ''
-compat_arguments_desc: "自用修改版 订阅链接 不需要编码即可使用\n\n订阅: 输入你的订阅地址\n名称: 填写你的机场名字\n重置: 填写流量重置日期"
+compat_arguments_desc: "自用修改版 订阅链接 不再需要编码即可使用\n\n重置: 是填写自己流量重置日期"
 scriptings:
 - generic:
     name: 订阅面板
