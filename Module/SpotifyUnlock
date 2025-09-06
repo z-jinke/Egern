@@ -1,4 +1,4 @@
-name: Spotify解锁
+name: SpotifyPremium
 map_locals:
 - match: ^https:\/\/spclient\.wg\.spotify\.com\/(watch-feed-entrypoints|ads\/v3\/ads|pendragon|merch-npv-service)
   status_code: 200
