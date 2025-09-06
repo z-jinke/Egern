@@ -1,5 +1,5 @@
 /**
- * 作者: zjinke
+ * 引用：https://github.com/cc63/Surge/raw/refs/heads/main/Module/Panel/Sub-info/Moore/Sub-info.js
  * 功能: 自用修改版订阅流量监控脚本（增加使用进度百分比趣味表情）
  */
 
