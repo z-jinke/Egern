@@ -3,12 +3,12 @@ compat_arguments:
   备注名称: ''
   订阅地址: ''
   重置日期: ''
-compat_arguments_desc: "自用修改版 订阅链接 不再需要编码即可使用"
+compat_arguments_desc: "自用修改版 订阅链接 不再需要URL编码可直接使用"
 scriptings:
 - generic:
-    name: 订阅面板
+    name: 面板
     script_url: https://github.com/z-jinke/Egern/raw/refs/heads/main/Js/Fiowsub.js
     arguments:
       _compat.$argument: "url={{{订阅地址}}}&title={{{备注名称}}}&resetDay={{{重置日期}}}"
 panels:
-- name: 订阅面板
+- name: 面板
