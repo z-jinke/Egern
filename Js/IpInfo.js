@@ -34,7 +34,7 @@ $httpClient.get(url, (error, resp, body) => {
     }
 
     $done({
-        title: `位置${locationStr}\n`,
+        title: `${locationStr}\n`,
         content: `IP地址：${ip}\n运营商：${service}`,
         icon: fixedIcon,
         "icon-color": iconColor
