@@ -17,15 +17,17 @@
     const expireInfo = info.expire ? getExpireInfo(info.expire) : null;
     const resetInfo = args.resetDay ? getResetInfo(args.resetDay) : null;
 
-    const content = [
-      expireInfo ? `到期：${expireInfo.date}` : null,
-      `流量：${bytesToSize(total)}｜${bytesToSize(used)}`,
-      resetInfo ? `距离下次流量重置${resetInfo.days}天` : null
-    ].filter(Boolean); 
+    const lines = [];
+    lines.push(`流量${bytesToSize(total)}｜${bytesToSize(used)}`);
     
+    let secondLine = [];
+    if (expireInfo) secondLine.push(`到期${expireInfo.date}`);
+    if (resetInfo) secondLine.push(`流量重置${resetInfo.days}天`);
+    if (secondLine.length) lines.push(secondLine.join(" "));
+
     $done({
       title: args.title || "订阅流量",
-      content: content.join("\n"),
+      content: lines.join("\n"),
       icon: "antenna.radiowaves.left.and.right.circle.fill",
       "icon-color": "#00E28F",
     });
@@ -47,7 +49,7 @@ function getArgs() {
       const key = item.substring(0, index);
       const value = item.substring(index + 1);
       if (key === "url" || key === "title" || key === "resetDay") {
-        args[key] = key === "url" ? value : decodeURIComponent(value);
+        args[key] = decodeURIComponent(value);
       }
     }
   });
@@ -98,7 +100,7 @@ function getExpireInfo(expire) {
   }
 
   const date = new Date(expireTime);
-  const dateStr = `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, "0")}月${String(date.getDate()).padStart(2, "0")}日`;
+  const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
 
   return { date: dateStr };
 }
