@@ -1,3 +1,9 @@
+/**
+ * 作者: zjinke
+ * 功能: 自用修改版 Egern 订阅流量监控脚本
+ * 引用: https://github.com/cc63/Surge/raw/refs/heads/main/Module/Panel/Sub-info/Moore/Sub-info.js
+ */
+
 (async () => {
   try {
     const args = getArgs();
@@ -9,7 +15,6 @@
     const total = info.total;
 
     const expireInfo = info.expire ? getExpireInfo(info.expire) : null;
-
     const resetInfo = args.resetDay ? getResetInfo(args.resetDay) : null;
 
     const content = [
@@ -19,7 +24,7 @@
     ].filter(Boolean); 
     
     $done({
-      title: args.title,
+      title: args.title || "订阅流量",
       content: content.join("\n"),
       icon: "antenna.radiowaves.left.and.right.circle.fill",
       "icon-color": "#00E28F",
